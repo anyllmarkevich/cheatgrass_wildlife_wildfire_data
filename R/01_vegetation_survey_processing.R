@@ -22,9 +22,11 @@ veg_categories <- c("cheatgrass_plant", "cheatgrass_litter", "bare_ground", "oth
 
 # Convert a table of how many times each ID occurs into a vector that contains the count of all IDs, matching the columns of a summary table
 table_to_row <- function(table) {
+  veg_categories <- c("cheatgrass_plant", "cheatgrass_litter", "bare_ground", "other_litter", "other_plant")
   row <- rep(0, 5)
   for (content in names(table)) {
-    row[as.integer(content)] <- table[[content]]
+    content_num <- which(veg_categories == content)
+    row[as.integer(content_num)] <- table[[content]]
   }
   return(as.vector(row))
 }
@@ -39,6 +41,10 @@ point_data <- rbind(data_2020, data_2021)
 point_data <- point_data[order(point_data$year, point_data$plot, point_data$direction, point_data$distance, point_data$column, point_data$row),]
 
 # 5. PROCESS DATA
+# Convert numerical vegetation categories into readable categories
+point_data$content_id <- sapply(point_data$content_id, function(id, veg_type = veg_categories) veg_type[id])
+colnames(point_data)[which(colnames(point_data) == "content_id")] <- "content"
+
 # Summarize the contents of each sampling frame by counting the number of each content ID within a frame
 sample_data <- data.frame(matrix(ncol = 9, nrow = 0))
 colnames(sample_data) <- c("year", "plot", "direction", "distance", veg_categories)
@@ -47,7 +53,7 @@ for (this_year in unique(point_data$year)) {
     for (this_direction in unique(point_data$direction)) {
       for (this_distance in unique(point_data$distance)) {
         sample <- point_data |> 
-          subset(year == this_year & plot == this_plot & direction == this_direction & distance == this_distance, select = "content_id") |> table() |> 
+          subset(year == this_year & plot == this_plot & direction == this_direction & distance == this_distance, select = "content") |> table() |> 
           table_to_row()
           sample_data[nrow(sample_data) + 1,] <- c(this_year, this_plot, this_direction, this_distance, sample)
       }
@@ -67,9 +73,9 @@ for (this_year in unique(sample_data$year)){
 
 # 6. SAVE OUTPUTS
 # Save formatted vegetation data for every sampling point (a single pin within a sampling quadrant)
-write.csv(here::here(point_data, "data", "processed", "vegetation_point_data.csv"))
+write.csv(point_data, here::here("data", "processed", "vegetation_point_data.csv"), row.names = FALSE)
 # Save formatted summary of vegetation data for every sampling frame (a whole sampling quadrant)
-write.csv(here::here(sample_data, "data", "processed", "vegetation_pampling_frame_data.csv"))
+write.csv(sample_data, here::here("data", "processed", "vegetation_pampling_frame_data.csv"), row.names = FALSE)
 # Save formatted summary of vegetation data for every plot
-write.csv(here::here(plot_data, "data", "processed", "vegetation_plot_data.csv"))
+write.csv(plot_data, here::here("data", "processed", "vegetation_plot_data.csv"), row.names = FALSE)
 
