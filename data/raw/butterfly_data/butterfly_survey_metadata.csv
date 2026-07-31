@@ -1,0 +1,11 @@
+Survey,Start Time,End Time,Low Temp,High Temp,Wind  Speed,Wind Direction,Low Cloud Cover,High Cloud Cover,Year,Survey Sequence,Survey Number,Multiple Dates
+Survey 01,0800,0950,24,27,4-10,East,20,20,2020,1,1,0
+Survey 02,0800,1000,21,26,calm,None,35,35,2020,2,2,0
+Survey 03,0745,0945,25,28,calm,None,15,15,2020,3,3,0
+Survey 04,0745,0945,25,33,calm,None,10,10,2020,4,4,1
+Survey 05,0745,0930,24,27,4-10,North,5,35,2020,5,5,0
+Survey 06,0745,0945,21,24,4-10,North,5,10,2020,6,6,0
+Survey 07,0800,0955,20,23,0-5,Variable,20,20,2021,1,7,0
+Survey 08,0745,0930,26,28,calm,None,0,0,2021,2,8,0
+Survey 09,0745,0930,20,24,calm,None,0,0,2021,3,9,0
+Survey 10,0745,1000,23,32,calm,None,0,0,2021,4,10,0

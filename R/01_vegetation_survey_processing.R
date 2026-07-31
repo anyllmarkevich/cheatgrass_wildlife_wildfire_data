@@ -9,8 +9,8 @@
 library(here)
 
 # 2. LOAD DATA
-data_2020 <- read.csv(here::here("data", "raw", "vegetation_survey_2020.csv"))
-data_2021 <- read.csv(here::here("data", "raw", "vegetation_survey_2021.csv"))
+data_2020 <- read.csv(here::here("data", "raw", "vegetation_data", "vegetation_survey_2020.csv"))
+data_2021 <- read.csv(here::here("data", "raw", "vegetation_data", "vegetation_survey_2021.csv"))
 
 # Update column names to snake case for consistency
 colnames(data_2020) <- c("plot", "direction", "distance", "column", "row", "content_id")
