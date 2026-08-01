@@ -1,9 +1,9 @@
-Survey Date,Start Time,End Time,Low Temp,High Temp,Wind,Weather,Year,Survey Sequence,Survey Number
-2020/05/29,0438,0734,11,20,calm,10% overcast,2020,1,1
-2020/06/16,0440,0725,15,20,calm,10% overcast,2020,2,2
-2020/06/30,0440,0725,15,18,calm,clear,2020,3,3
-2020/07/08,0440,0710,18,22,calm,partly cloudy,2020,4,4
-2021/05/29,0438,0700,11,18,calm,clear,2021,1,5
-2021/06/12,0434,0702,15,18,calm,clear,2021,2,6
-2021/06/26,0440,0703,15,18,calm,partly cloudy,2021,3,7
-2021/07/10,0440,0703,17,21,calm,mostly cloudy,2021,4,8
+Survey,Date,Start Time,End Time,Low Temp,High Temp,Wind,Weather,Year,Survey Sequence,Survey Number
+Survey 01,2020/05/29,0438,0734,11,20,calm,10% overcast,2020,1,1
+Survey 02,2020/06/16,0440,0725,15,20,calm,10% overcast,2020,2,2
+Survey 03,2020/06/30,0440,0725,15,18,calm,clear,2020,3,3
+Survey 04,2020/07/08,0440,0710,18,22,calm,partly cloudy,2020,4,4
+Survey 05,2021/05/29,0438,0700,11,18,calm,clear,2021,1,5
+Survey 06,2021/06/12,0434,0702,15,18,calm,clear,2021,2,6
+Survey 07,2021/06/26,0440,0703,15,18,calm,partly cloudy,2021,3,7
+Survey 08,2021/07/10,0440,0703,17,21,calm,mostly cloudy,2021,4,8
