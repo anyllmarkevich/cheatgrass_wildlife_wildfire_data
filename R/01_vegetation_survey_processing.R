@@ -12,7 +12,7 @@ library(here)
 data_2020 <- read.csv(here::here("data", "raw", "vegetation_data", "vegetation_survey_2020.csv"))
 data_2021 <- read.csv(here::here("data", "raw", "vegetation_data", "vegetation_survey_2021.csv"))
 
-# Update column names to snake case for consistency
+# Update column names to snake case for consistency when re-exporting formatted tables
 colnames(data_2020) <- c("plot", "direction", "distance", "column", "row", "content_id")
 colnames(data_2021) <- c("plot", "direction", "distance", "column", "row", "content_id")
 
