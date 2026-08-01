@@ -12,7 +12,7 @@ library(here)
 data_2020 <- read.csv(here::here("data", "raw", "vegetation_data", "vegetation_survey_2020.csv"))
 data_2021 <- read.csv(here::here("data", "raw", "vegetation_data", "vegetation_survey_2021.csv"))
 
-# Update column names to snake case for consistency when re-exporting formatted tables
+# Update column names in tables that will be re=exported to snake case for consistency
 colnames(data_2020) <- c("plot", "direction", "distance", "column", "row", "content_id")
 colnames(data_2021) <- c("plot", "direction", "distance", "column", "row", "content_id")
 
@@ -78,6 +78,6 @@ for (this_year in unique(sample_data$year)) {
 # Save formatted vegetation data for every sampling point (a single pin within a sampling quadrant)
 write.csv(point_data, here::here("data", "processed", "vegetation_point_data.csv"), row.names = FALSE)
 # Save formatted summary of vegetation data for every sampling frame (a whole sampling quadrant)
-write.csv(sample_data, here::here("data", "processed", "vegetation_pampling_frame_data.csv"), row.names = FALSE)
+write.csv(sample_data, here::here("data", "processed", "vegetation_sampling_frame_data.csv"), row.names = FALSE)
 # Save formatted summary of vegetation data for every plot
 write.csv(plot_data, here::here("data", "processed", "vegetation_plot_data.csv"), row.names = FALSE)
