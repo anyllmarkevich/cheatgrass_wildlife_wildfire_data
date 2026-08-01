@@ -62,4 +62,4 @@ metadata <-  metadata %>% select(year, survey_order, survey_number, date, start_
 # OUTPUTS
 write.csv(point_count_data, here::here("data", "processed", "bird_survey_data.csv"), row.names = FALSE)
 write.csv(metadata, here::here("data", "processed", "bird_survey_metadata.csv"), row.names = FALSE)
-write.csv(metadata, here::here("data", "processed", "bird_plot_data.csv"), row.names = FALSE)
+write.csv(plot_data, here::here("data", "processed", "bird_plot_data.csv"), row.names = FALSE)
