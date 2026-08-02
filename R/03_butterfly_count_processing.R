@@ -48,16 +48,16 @@ count_species <- function(butterfly_data_rows) {
 }
 
 # 4. PROCESS DATA
-# Reformat point count data from a table of plots and survey names to a list of individual observations (annotated with the observation date and other key metadata). This new format follows tidy data principles and is far more query-able with data analysis software tools
+# Reformat transect count data from a table of plots and survey names to a list of individual observations (annotated with the observation date and other key metadata). This new format follows tidy data principles and is far more query-able with data analysis software tools
 transect_count_data <- data.frame(matrix(nrow = 0, ncol = 10))
 for (this_plot in unique(data$Plot)) {
   plot_data <- subset(data, Plot == this_plot)
   for (this_survey in metadata$survey_name) {
-    # Extract all bird observations for a give observation date on a given plot
+    # Extract all butterfly observations for a give observation date on a given plot
     row_ids <- which(!is.na(plot_data[[this_survey]]))
-    # Calculate the number of different items that need recorded (one for each kind of bird observed on a plot during a single survey)
+    # Calculate the number of different items that need recorded (one for each kind of butterfly observed on a plot during a single survey)
     n_ids <- length(row_ids)
-    # Combine all the data needed for a single bird observation entry in the data set
+    # Combine all the data needed for a single butterfly observation entry in the data set
     observed_butterflies <- plot_data$Species[row_ids]
     observed_counts <- plot_data[[this_survey]][row_ids]
     observation_plot <- plot_data$Plot[row_ids]
@@ -74,10 +74,10 @@ for (this_plot in unique(data$Plot)) {
     transect_count_data <- rbind(transect_count_data, temp_data)
   }
 }
-# Sensibly sort bird observations to aide further analysis and clean up the data
+# Sensibly sort butterfly observations to aide further analysis and clean up the data
 transect_count_data <- transect_count_data[order(transect_count_data$year, transect_count_data$survey_order, transect_count_data$plot, transect_count_data$species),]
 
-# Convert bird observation data into a summary of individual counts and species richness per plot
+# Convert butterfly observation data into a summary of individual counts and species richness per plot
 plot_data <- data.frame(matrix(nrow = 0, ncol = 4))
 colnames(plot_data) <- c("year", "plot", "butterfly_count", "butterfly_species")
 for (this_year in unique(metadata$year)) {
@@ -93,13 +93,13 @@ for (this_year in unique(metadata$year)) {
 }
 
 # 5. SAVE OUTPUTS
-# Remove newly unnecessary metadata columns (thanks to new point count data format) and rearrange metadata columns to improve usability
+# Remove newly unnecessary metadata columns (thanks to new transect count data format) and rearrange metadata columns to improve usability
 metadata <- subset(metadata, select=-survey_name)
 metadata <-  metadata %>% dplyr::select(year, survey_order, survey_number, start_time, end_time, low_temp, high_temp, wind_speed, wind_direction, low_cloud_cover, high_cloud_cover, multiple_dates)
 
-# Save formatted complete bird point count data, now in an easily query-able format
+# Save formatted complete butterfly transect count data, now in an easily query-able format
 write.csv(transect_count_data, here::here("data", "processed", "butterfly_survey_data.csv"), row.names = FALSE)
-# Save metadata on conditions and timing of each bird survey
+# Save metadata on conditions and timing of each butterfly survey
 write.csv(metadata, here::here("data", "processed", "butterfly_survey_metadata.csv"), row.names = FALSE)
-# Save formatted summary of bird data for every plot (number of individuals and species richness)
+# Save formatted summary of butterfly data for every plot (number of individuals and species richness)
 write.csv(plot_data, here::here("data", "processed", "butterfly_plot_data.csv"), row.names = FALSE)
