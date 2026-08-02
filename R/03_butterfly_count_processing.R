@@ -49,7 +49,7 @@ count_species <- function(butterfly_data_rows) {
 
 # 4. PROCESS DATA
 # Reformat transect count data from a table of plots and survey names to a list of individual observations (annotated with the observation date and other key metadata). This new format follows tidy data principles and is far more query-able with data analysis software tools
-transect_count_data <- data.frame(matrix(nrow = 0, ncol = 10))
+transect_count_data <- data.frame(matrix(nrow = 0, ncol = 11))
 for (this_plot in unique(data$Plot)) {
   plot_data <- subset(data, Plot == this_plot)
   for (this_survey in metadata$survey_name) {
@@ -65,12 +65,13 @@ for (this_plot in unique(data$Plot)) {
     observation_date <- rep(dates[which(dates$Plot == this_plot), which(colnames(dates) == this_survey)], n_ids)
     observation_time <- rep(times[which(times$Plot == this_plot), which(colnames(times) == this_survey)], n_ids)
     observation_order <- rep(subset(metadata, survey_name == this_survey)$survey_order, n_ids)
+    observation_number <- rep(subset(metadata, survey_name == this_survey)$survey_number, n_ids)
     # This data is useful to avoid potential double-counting of species when inexact species IDs are used
     observation_exact <- unlist(lapply(observed_butterflies, function(x) { codes$Exact.ID[which(codes$Common.Name==x)] }))
     observation_informative <- unlist(lapply(observed_butterflies, function(x) { codes$Informative.ID[which(codes$Common.Name==x)] }))
     observation_taxon <- unlist(lapply(observed_butterflies, function(x) { codes$Higher.Taxon[which(codes$Common.Name==x)] }))
     # Save the data
-    temp_data <- data.frame(year = observation_year, survey_order = observation_order, date = observation_date, time = observation_time, plot = observation_plot, species = observed_butterflies, count = observed_counts, exact_id = observation_exact, informative_id = observation_informative, group_name = observation_taxon)
+    temp_data <- data.frame(year = observation_year, survey_order = observation_order, survey_number = observation_number, date = observation_date, time = observation_time, plot = observation_plot, species = observed_butterflies, count = observed_counts, exact_id = observation_exact, informative_id = observation_informative, group_name = observation_taxon)
     transect_count_data <- rbind(transect_count_data, temp_data)
   }
 }
@@ -78,15 +79,16 @@ for (this_plot in unique(data$Plot)) {
 transect_count_data <- transect_count_data[order(transect_count_data$year, transect_count_data$survey_order, transect_count_data$plot, transect_count_data$species),]
 
 # Convert butterfly observation data into a summary of individual counts and species richness per plot
+# NOTE: For consistency, only 4 of the 6 surveys in 2020 are included, as there were only 4 surveys in 2021
 plot_data <- data.frame(matrix(nrow = 0, ncol = 4))
 colnames(plot_data) <- c("year", "plot", "butterfly_count", "butterfly_species")
 for (this_year in unique(metadata$year)) {
   for (this_plot in unique(transect_count_data$plot)) {
     # Extract data relevant to a specific plot in a specific year
-    plot_transect_count_data <- subset(transect_count_data, year == this_year & plot == this_plot)
+    plot_transect_count_data <- subset(transect_count_data, year == this_year & plot == this_plot & survey_order <= 4)
     # Calculate summary statistics: number of individuals observed and species richness
-    butterfly_count <- sum(plot_transect_count_data$count)
-    species_count <- count_species(plot_transect_count_data)
+    butterfly_count <- sum(plot_transect_count_data$count)/max(plot_transect_count_data$survey_order)
+    species_count <- count_species(plot_transect_count_data)/max(plot_transect_count_data$survey_order)
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, butterfly_count, species_count)
   }

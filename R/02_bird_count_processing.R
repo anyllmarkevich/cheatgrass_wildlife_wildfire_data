@@ -25,7 +25,7 @@ colnames(metadata) <- c("survey_name", "date", "start_time", "end_time", "low_te
 
 # 3. PROCESS DATA
 # Reformat point count data from a table of plots and survey names to a list of individual observations (annotated with the observation date and other key metadata). This new format follows tidy data principles and is far more query-able with data analysis software tools
-point_count_data <- data.frame(matrix(nrow = 0, ncol = 7))
+point_count_data <- data.frame(matrix(nrow = 0, ncol = 8))
 for (this_plot in unique(data$Plot)) {
   plot_data <- subset(data, Plot == this_plot)
   for (this_survey in metadata$survey_name) {
@@ -41,8 +41,9 @@ for (this_plot in unique(data$Plot)) {
     observation_year <- rep(subset(metadata, survey_name == this_survey)$year, n_ids)
     observation_date <- rep(subset(metadata, survey_name == this_survey)$date, n_ids)
     observation_order <- rep(subset(metadata, survey_name == this_survey)$survey_order, n_ids)
+    observation_number <- rep(subset(metadata, survey_name == this_survey)$survey_number, n_ids)
     # Save the data
-    temp_data <- data.frame(year = observation_year, survey_order = observation_order, date = observation_date, plot = observation_plot, species = observed_birds, alpha_code = observed_codes, count = observed_counts)
+    temp_data <- data.frame(year = observation_year, survey_order = observation_order, survey_number = observation_number, date = observation_date, plot = observation_plot, species = observed_birds, alpha_code = observed_codes, count = observed_counts)
     point_count_data <- rbind(point_count_data, temp_data)
   }
 }
@@ -57,8 +58,8 @@ for (this_year in unique(metadata$year)) {
     # Extract data relevant to a specific plot in a specific year
     plot_point_count_data <- subset(point_count_data, year == this_year & plot == this_plot)
     # Calculate summary statistics: number of individuals observed and species richness
-    bird_count <- sum(plot_point_count_data$count)
-    species_count <- plot_point_count_data |> subset(!is.na(alpha_code), select = alpha_code) |> unique() |> nrow()
+    bird_count <- sum(plot_point_count_data$count)/max(plot_point_count_data$survey_order)
+    species_count <- plot_point_count_data |> subset(!is.na(alpha_code), select = alpha_code) |> unique() |> nrow()/max(plot_point_count_data$survey_order)
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, bird_count, species_count)
   }
