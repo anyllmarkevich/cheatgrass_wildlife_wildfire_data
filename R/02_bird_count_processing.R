@@ -18,7 +18,9 @@ metadata <- read.csv(here::here("data", "raw", "bird_data", "bird_survey_metadat
 codes$Alpha.Code[which(codes$Alpha.Code == "")] <- NA
 
 # Make metadata survey names compatible with R column names for each survey by replacing white spaces with periods. This data column will later be removed when re-exporting the metadata as survey names will become redundant
-metadata$Survey <- lapply(metadata$Survey, function(x) {gsub(" ", ".", x)})
+metadata$Survey <- lapply(metadata$Survey, function(x) {
+  gsub(" ", ".", x)
+})
 
 # Update column names in tables that will be re-exported to snake case for consistency
 colnames(metadata) <- c("survey_name", "date", "start_time", "end_time", "low_temp", "high_temp", "wind_conditions", "weather_conditions", "year", "survey_order", "survey_number")
@@ -36,7 +38,9 @@ for (this_plot in unique(data$Plot)) {
     # Combine all the data needed for a single bird observation entry in the data set
     observed_birds <- plot_data$Species[row_ids]
     observed_counts <- plot_data[[this_survey]][row_ids]
-    observed_codes <- unlist(lapply(observed_birds, function(x) { codes$Alpha.Code[which(codes$Common.Name==x)] }))
+    observed_codes <- unlist(lapply(observed_birds, function(x) {
+      codes$Alpha.Code[which(codes$Common.Name == x)]
+    }))
     observation_plot <- plot_data$Plot[row_ids]
     observation_year <- rep(subset(metadata, survey_name == this_survey)$year, n_ids)
     observation_date <- rep(subset(metadata, survey_name == this_survey)$date, n_ids)
@@ -48,7 +52,7 @@ for (this_plot in unique(data$Plot)) {
   }
 }
 # Sensibly sort bird observations to aide further analysis and clean up the data
-point_count_data <- point_count_data[order(point_count_data$year, point_count_data$survey_order, point_count_data$plot, point_count_data$alpha_code),]
+point_count_data <- point_count_data[order(point_count_data$year, point_count_data$survey_order, point_count_data$plot, point_count_data$alpha_code), ]
 
 # Convert bird observation data into a summary of individual counts and species richness per plot
 plot_data <- data.frame(matrix(nrow = 0, ncol = 4))
@@ -58,8 +62,11 @@ for (this_year in unique(metadata$year)) {
     # Extract data relevant to a specific plot in a specific year
     plot_point_count_data <- subset(point_count_data, year == this_year & plot == this_plot)
     # Calculate summary statistics: number of individuals observed and species richness
-    bird_count <- sum(plot_point_count_data$count)/max(plot_point_count_data$survey_order)
-    species_count <- plot_point_count_data |> subset(!is.na(alpha_code), select = alpha_code) |> unique() |> nrow()/max(plot_point_count_data$survey_order)
+    bird_count <- sum(plot_point_count_data$count) / max(plot_point_count_data$survey_order)
+    species_count <- plot_point_count_data |>
+      subset(!is.na(alpha_code), select = alpha_code) |>
+      unique() |>
+      nrow() / max(plot_point_count_data$survey_order)
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, bird_count, species_count)
   }
@@ -67,8 +74,8 @@ for (this_year in unique(metadata$year)) {
 
 # 4. SAVE OUTPUTS
 # Remove newly unnecessary metadata columns (thanks to new point count data format) and rearrange metadata columns to improve usability
-metadata <- subset(metadata, select=-survey_name)
-metadata <-  metadata %>% dplyr::select(year, survey_order, survey_number, date, start_time, end_time, low_temp, high_temp, wind_conditions, weather_conditions)
+metadata <- subset(metadata, select = -survey_name)
+metadata <- metadata %>% dplyr::select(year, survey_order, survey_number, date, start_time, end_time, low_temp, high_temp, wind_conditions, weather_conditions)
 
 # Save formatted complete bird point count data, now in an easily query-able format
 write.csv(point_count_data, here::here("data", "processed", "bird_survey_data.csv"), row.names = FALSE)

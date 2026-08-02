@@ -20,7 +20,9 @@ times <- read.csv(here::here("data", "raw", "butterfly_data", "butterfly_survey_
 codes$Higher.Taxon[which(codes$Higher.Taxon == "")] <- NA
 
 # Make metadata survey names compatible with R column names for each survey by replacing white spaces with periods. This data column will later be removed when re-exporting the metadata as survey names will become redundant
-metadata$Survey <- lapply(metadata$Survey, function(x) {gsub(" ", ".", x)})
+metadata$Survey <- lapply(metadata$Survey, function(x) {
+  gsub(" ", ".", x)
+})
 
 # Update column names in tables that will be re-exported to snake case for consistency
 colnames(metadata) <- c("survey_name", "start_time", "end_time", "low_temp", "high_temp", "wind_speed", "wind_direction", "low_cloud_cover", "high_cloud_cover", "year", "survey_order", "survey_number", "multiple_dates")
@@ -30,9 +32,15 @@ colnames(metadata) <- c("survey_name", "start_time", "end_time", "low_temp", "hi
 count_species <- function(butterfly_data_rows) {
   # Extract info about every unique species entry
   species_list <- unique(butterfly_data_rows$species)
-  exact_id <- unlist(lapply(species_list, function(x) { butterfly_data_rows$exact_id[which(butterfly_data_rows$species==x)[1]] }))
-  informative_id <- unlist(lapply(species_list, function(x) { butterfly_data_rows$informative_id[which(butterfly_data_rows$species==x)[1]] }))
-  higher_taxon <- unlist(lapply(species_list, function(x) { butterfly_data_rows$group_name[which(butterfly_data_rows$species==x)[1]] }))
+  exact_id <- unlist(lapply(species_list, function(x) {
+    butterfly_data_rows$exact_id[which(butterfly_data_rows$species == x)[1]]
+  }))
+  informative_id <- unlist(lapply(species_list, function(x) {
+    butterfly_data_rows$informative_id[which(butterfly_data_rows$species == x)[1]]
+  }))
+  higher_taxon <- unlist(lapply(species_list, function(x) {
+    butterfly_data_rows$group_name[which(butterfly_data_rows$species == x)[1]]
+  }))
   unique_species <- 0
   # Check whether each unique species entry should be counted as a separate species, and update the total accordingly
   for (i in 1:length(species_list)) {
@@ -67,16 +75,22 @@ for (this_plot in unique(data$Plot)) {
     observation_order <- rep(subset(metadata, survey_name == this_survey)$survey_order, n_ids)
     observation_number <- rep(subset(metadata, survey_name == this_survey)$survey_number, n_ids)
     # This data is useful to avoid potential double-counting of species when inexact species IDs are used
-    observation_exact <- unlist(lapply(observed_butterflies, function(x) { codes$Exact.ID[which(codes$Common.Name==x)] }))
-    observation_informative <- unlist(lapply(observed_butterflies, function(x) { codes$Informative.ID[which(codes$Common.Name==x)] }))
-    observation_taxon <- unlist(lapply(observed_butterflies, function(x) { codes$Higher.Taxon[which(codes$Common.Name==x)] }))
+    observation_exact <- unlist(lapply(observed_butterflies, function(x) {
+      codes$Exact.ID[which(codes$Common.Name == x)]
+    }))
+    observation_informative <- unlist(lapply(observed_butterflies, function(x) {
+      codes$Informative.ID[which(codes$Common.Name == x)]
+    }))
+    observation_taxon <- unlist(lapply(observed_butterflies, function(x) {
+      codes$Higher.Taxon[which(codes$Common.Name == x)]
+    }))
     # Save the data
     temp_data <- data.frame(year = observation_year, survey_order = observation_order, survey_number = observation_number, date = observation_date, time = observation_time, plot = observation_plot, species = observed_butterflies, count = observed_counts, exact_id = observation_exact, informative_id = observation_informative, group_name = observation_taxon)
     transect_count_data <- rbind(transect_count_data, temp_data)
   }
 }
 # Sensibly sort butterfly observations to aide further analysis and clean up the data
-transect_count_data <- transect_count_data[order(transect_count_data$year, transect_count_data$survey_order, transect_count_data$plot, transect_count_data$species),]
+transect_count_data <- transect_count_data[order(transect_count_data$year, transect_count_data$survey_order, transect_count_data$plot, transect_count_data$species), ]
 
 # Convert butterfly observation data into a summary of individual counts and species richness per plot
 # NOTE: For consistency, only 4 of the 6 surveys in 2020 are included, as there were only 4 surveys in 2021
@@ -87,8 +101,8 @@ for (this_year in unique(metadata$year)) {
     # Extract data relevant to a specific plot in a specific year
     plot_transect_count_data <- subset(transect_count_data, year == this_year & plot == this_plot & survey_order <= 4)
     # Calculate summary statistics: number of individuals observed and species richness
-    butterfly_count <- sum(plot_transect_count_data$count)/max(plot_transect_count_data$survey_order)
-    species_count <- count_species(plot_transect_count_data)/max(plot_transect_count_data$survey_order)
+    butterfly_count <- sum(plot_transect_count_data$count) / max(plot_transect_count_data$survey_order)
+    species_count <- count_species(plot_transect_count_data) / max(plot_transect_count_data$survey_order)
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, butterfly_count, species_count)
   }
@@ -96,8 +110,8 @@ for (this_year in unique(metadata$year)) {
 
 # 5. SAVE OUTPUTS
 # Remove newly unnecessary metadata columns (thanks to new transect count data format) and rearrange metadata columns to improve usability
-metadata <- subset(metadata, select=-survey_name)
-metadata <-  metadata %>% dplyr::select(year, survey_order, survey_number, start_time, end_time, low_temp, high_temp, wind_speed, wind_direction, low_cloud_cover, high_cloud_cover, multiple_dates)
+metadata <- subset(metadata, select = -survey_name)
+metadata <- metadata %>% dplyr::select(year, survey_order, survey_number, start_time, end_time, low_temp, high_temp, wind_speed, wind_direction, low_cloud_cover, high_cloud_cover, multiple_dates)
 
 # Save formatted complete butterfly transect count data, now in an easily query-able format
 write.csv(transect_count_data, here::here("data", "processed", "butterfly_survey_data.csv"), row.names = FALSE)
