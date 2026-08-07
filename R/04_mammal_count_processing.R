@@ -28,25 +28,25 @@ session_from_date_time <- function(date, time, plot, date_table, time_table) {
   this_date <- split_date(date)
   good_ids <- c()
   # Check each session to see if the given date may be part of it
-  for (i in 1:length(date_table[,1])) {
+  for (i in 1:length(date_table[, 1])) {
     start <- split_date(date_table$Start.Day[i])
     end <- split_date(date_table$End.Day[i])
     # Check if the given date is contained within the session
     if (
       (this_date[1] > start[1] || (this_date[1] == start[1] && this_date[2] >= start[2])) &&
-      (this_date[1] < end[1] || (this_date[1] == end[1] && this_date[2] <= end[2]))
+        (this_date[1] < end[1] || (this_date[1] == end[1] && this_date[2] <= end[2]))
     ) {
       good_ids <- c(good_ids, i)
     }
   }
   # Keep only possible sessions
-  possible_sessions <- date_table[good_ids,]
+  possible_sessions <- date_table[good_ids, ]
   # Return the correct session
-  if (length(possible_sessions[,1]) > 1) { # If multiple sessions are possible based on the data, return the correct session based on the time
+  if (length(possible_sessions[, 1]) > 1) { # If multiple sessions are possible based on the data, return the correct session based on the time
     starting_session <- unname(unlist(subset(date_table, date == Start.Day, select = Session)))
     session_change_time <- times_2021[[paste("Start.Time.Session.", starting_session, sep = "")]][plot]
     if (time < session_change_time) { # If the photo was taken before the session change, return the previous session
-      return(starting_session -1)
+      return(starting_session - 1)
     } else { # If the photo was taken after the session change, return the next session
       return(starting_session)
     }
@@ -75,7 +75,7 @@ for (time_code in dates_2020$Time.Code) {
   observation_directions <- rep(direction, n_ids)
   observation_plots <- data_2020$Plot[row_ids]
   observation_species <- data_2020$Species[row_ids]
-  observation_counts <- subset(data_2020, select = col_name)[row_ids,1]
+  observation_counts <- subset(data_2020, select = col_name)[row_ids, 1]
   # Update species names to be consistent with 2021 data
   observation_species <- gsub("Misc\\.", "Unidentified", observation_species)
   observation_species[which(observation_species == "Ungulate")] <- "Unidentified Ungulate"
@@ -95,12 +95,12 @@ for (this_plot in unique(data_2021$Plot)) {
     this_session <- session_from_date_time(this_date, this_time, this_plot, dates_2021, times_2021)
     this_direction <- directions$Direction[which(directions$Session == this_session)]
     # Isolate animal data
-    animal_cols <- image_data %>% select(-Plot, -Image, -Date, - Time)
+    animal_cols <- image_data %>% select(-Plot, -Image, -Date, -Time)
     # If the photo contained animals, record an observation
-    if (!all(is.na(animal_cols[1,]))){
+    if (!all(is.na(animal_cols[1, ]))) {
       # Record the observed species and their counts
-      species <- colnames(animal_cols)[which(!is.na(animal_cols[1,]))]
-      counts <- animal_cols[1, which(!is.na(animal_cols[1,]))] |> unname()
+      species <- colnames(animal_cols)[which(!is.na(animal_cols[1, ]))]
+      counts <- animal_cols[1, which(!is.na(animal_cols[1, ]))] |> unname()
       for (i in 1:length(species)) {
         # Convert column names to consistent taxa names
         this_species <- gsub("\\.", " ", species[i])
@@ -121,7 +121,10 @@ for (this_year in c(2020, 2021)) {
     plot_trailcam_photo_data <- subset(trailcam_photo_data, year == this_year & plot == this_plot)
     # Calculate summary statistics: number of individuals observed and species richness
     mammal_count <- sum(as.integer(plot_trailcam_photo_data$count))
-    species_count <- plot_trailcam_photo_data |> subset(!(species %in% c("Unidentified Deer", "Unidentified Mammal", "Unidentified Ungulate")), select = species) |> unique() |> nrow()
+    species_count <- plot_trailcam_photo_data |>
+      subset(!(species %in% c("Unidentified Deer", "Unidentified Mammal", "Unidentified Ungulate")), select = species) |>
+      unique() |>
+      nrow()
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, mammal_count, species_count)
   }
