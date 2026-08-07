@@ -67,6 +67,7 @@ for (time_code in dates_2020$Time.Code) {
   
   observation_plots <- data_2020$Plot[row_ids]
   observation_species <- data_2020$Species[row_ids]
+  observation_species <- gsub("Misc\\.", "Unidentified", observation_species)
   observation_counts <- subset(data_2020, select = col_name)[row_ids,1]
   
   temp_data <- data.frame(year = rep(2020, n_ids), plot = observation_plots, date = observation_dates, time = rep(NA, n_ids), session = observation_sessions, camera_direction = observation_directions, image = rep(NA, n_ids), species = observation_species, count = observation_counts)
