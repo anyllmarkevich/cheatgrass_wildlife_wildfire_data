@@ -18,7 +18,7 @@ times_2021 <- read.csv(here::here("data", "raw", "mammal_data", "mammal_times_20
 directions <- read.csv(here::here("data", "raw", "mammal_data", "mammal_camera_directions.csv"))
 
 # 3. DEFINITIONS
-# Convert a date formatted a "MM/DD" string into a vector with two separate numerical values
+# Convert a date formatted as a "MM/DD" string into a vector with two separate numerical values
 split_date <- function(date) {
   return(as.integer(unlist(strsplit(date, "/"))))
 }
