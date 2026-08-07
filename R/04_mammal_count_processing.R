@@ -51,7 +51,7 @@ split_date <- function(date) {
 
 # SOMETHING
 # 2020
-mammal_data <- data.frame(matrix(ncol = 7, nrow = 0))
+trailcam_photo_data <- data.frame(matrix(ncol = 7, nrow = 0))
 for (time_code in dates_2020$Time.Code) {
   date <- dates_2020$Date[which(dates_2020$Time.Code == time_code)]
   session <- dates_2020$Session[which(dates_2020$Time.Code == time_code)]
@@ -68,10 +68,11 @@ for (time_code in dates_2020$Time.Code) {
   observation_plots <- data_2020$Plot[row_ids]
   observation_species <- data_2020$Species[row_ids]
   observation_species <- gsub("Misc\\.", "Unidentified", observation_species)
+  observation_species[which(observation_species == "Ungulate")] <- "Unidentified Ungulate"
   observation_counts <- subset(data_2020, select = col_name)[row_ids,1]
   
   temp_data <- data.frame(year = rep(2020, n_ids), plot = observation_plots, date = observation_dates, time = rep(NA, n_ids), session = observation_sessions, camera_direction = observation_directions, image = rep(NA, n_ids), species = observation_species, count = observation_counts)
-  mammal_data <- rbind(mammal_data, temp_data)
+  trailcam_photo_data <- rbind(trailcam_photo_data, temp_data)
 }
 
 # 2021
@@ -87,18 +88,31 @@ for (this_plot in unique(data_2021$Plot)) {
     
     if (!all(is.na(animal_cols[1,]))){
       species <- colnames(animal_cols)[which(!is.na(animal_cols[1,]))]
-      counts <- animal_cols[1, which(!is.na(animal_cols[1,]))] %>% unname()
+      counts <- animal_cols[1, which(!is.na(animal_cols[1,]))] |> unname()
       for (i in 1:length(species)) {
         this_species <- gsub("\\.", " ", species[i])
         temp_data <- c(2021, this_plot, this_date, this_time, this_session, this_direction, this_image, this_species, counts[i])
-        mammal_data <- rbind(mammal_data, temp_data)
+        trailcam_photo_data <- rbind(trailcam_photo_data, temp_data)
       }
     }
   }
 }
 
+# SUMMARY
+# Convert mammal observation data into a summary of individual counts and species richness per plot
+plot_data <- data.frame(matrix(nrow = 0, ncol = 4))
+colnames(plot_data) <- c("year", "plot", "mammal_count", "mammal_species")
+for (this_year in c(2020, 2021)) {
+  for (this_plot in 1:8) {
+    # Extract data relevant to a specific plot in a specific year
+    plot_trailcam_photo_data <- subset(trailcam_photo_data, year == this_year & plot == this_plot)
+    # Calculate summary statistics: number of individuals observed and species richness
+    mammal_count <- sum(as.integer(plot_trailcam_photo_data$count))
+    species_count <- plot_trailcam_photo_data |> subset(!(species %in% c("Unidentified Deer", "Unidentified Mammal", "Unidentified Ungulate")), select = species) |> unique() |> nrow()
+    # Save the data
+    plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, mammal_count, species_count)
+  }
+}
 
-
-
-
-
+# Save formatted complete mammal trail cam photo data, now in an easily query-able format
+write.csv(trailcam_photo_data, here::here("data", "processed", "mammal_survey_data.csv"), row.names = FALSE)
