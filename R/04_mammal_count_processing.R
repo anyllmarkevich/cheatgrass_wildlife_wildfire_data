@@ -74,19 +74,22 @@ for (time_code in dates_2020$Time.Code) {
 }
 
 # 2021
-for (this_plot in data_2021$Plot) {
+for (this_plot in unique(data_2021$Plot)) {
   plot_data <- subset(data_2021, Plot == this_plot)
-  for (this_image in plot_data$Image) {
+  for (this_image in unique(plot_data$Image)) {
     image_data <- subset(plot_data, Image == this_image)
     animal_cols <- image_data %>% select(-Plot, -Image, -Date, - Time)
     this_date <- paste(split_date(substr(image_data$Date, 6, 10)), collapse = "/")
     this_time <- image_data$Time
     this_session <- session_from_date_time(this_date, this_time, this_plot, dates_2021, times_2021)
     this_direction <- directions$Direction[which(directions$Session == this_session)]
-    for (this_species in colnames(animal_cols)) {
-      if (all(!is.na(image_data[[this_species]]))) {
-        this_count <- sum(image_data[[this_species]])
-        temp_data <- c(2021, this_plot, this_date, this_time, this_session, this_direction, this_image, this_species, this_count)
+    
+    if (!all(is.na(animal_cols[1,]))){
+      species <- colnames(animal_cols)[which(!is.na(animal_cols[1,]))]
+      counts <- animal_cols[1, which(!is.na(animal_cols[1,]))] %>% unname()
+      for (i in 1:length(species)) {
+        this_species <- gsub("\\.", " ", species[i])
+        temp_data <- c(2021, this_plot, this_date, this_time, this_session, this_direction, this_image, this_species, counts[i])
         mammal_data <- rbind(mammal_data, temp_data)
       }
     }
