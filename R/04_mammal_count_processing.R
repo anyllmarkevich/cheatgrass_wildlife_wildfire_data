@@ -132,3 +132,4 @@ for (this_year in c(2020, 2021)) {
 
 # 5. SAVE OUTPUTS
 write.csv(trailcam_photo_data, here::here("data", "processed", "mammal_survey_data.csv"), row.names = FALSE)
+write.csv(plot_data, here::here("data", "processed", "mammal_plot_data.csv"), row.names = FALSE)
