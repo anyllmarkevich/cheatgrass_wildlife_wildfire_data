@@ -1,0 +1,9 @@
+Plot,Latitude,Longitude,Property,Access Property,2020 Cheatgrass Level,2021 Cheatgrass Level,Calwood Fire Impact
+1,40°9’56.90”N,105°16’12.50”W,Pierce,Pierce,High,Low,Burned
+2,40°10’4.20”N,105°16’8.50”W,Pierce,Pierce,Low,Low,Burned
+3,40°10’9.10”N,105°16’7.90”W,Pierce,Pierce,Low,Low,Burned
+4,40°10’18.60”N,105°16’6.50”W,Trevarton,Pierce,High,Low,Burned
+5,40°10’35.20”N,105°15’35.50”W,Trevarton,Trevarton,Low,Low,Unburned
+6,40°10’33.70”N,105°15’41.80”W,Trevarton,Trevarton,Low,Low,Unburned
+7,40°10’47.00”N,105°15’34.30”W,Trevarton,Trevarton,High,High,Unburned
+8,40°10’54.50”N,105°15’33.30”W,Trevarton,Trevarton,High,High,Unburned
