@@ -1,0 +1,329 @@
+"year","survey_order","survey_number","date","time","plot","species","count","exact_id","informative_id","group_name"
+2020,1,1,"05/31/2020",945,1,"Clouded Sulphur",3,1,1,"Sulphur species"
+2020,1,1,"05/31/2020",936,2,"Checkered White",1,1,1,"White species"
+2020,1,1,"05/31/2020",936,2,"Elfin species",2,0,1,NA
+2020,1,1,"05/31/2020",936,2,"Orange Sulphur",2,1,1,"Sulphur species"
+2020,1,1,"05/31/2020",936,2,"Red Admiral",1,1,1,NA
+2020,1,1,"05/31/2020",936,2,"Variegated Fritillary",5,1,1,NA
+2020,1,1,"05/31/2020",927,3,"Checkered White",1,1,1,"White species"
+2020,1,1,"05/31/2020",927,3,"Milbert's Tortoiseshell",2,1,1,NA
+2020,1,1,"05/31/2020",927,3,"Orange Sulphur",2,1,1,"Sulphur species"
+2020,1,1,"05/31/2020",927,3,"Variegated Fritillary",2,1,1,NA
+2020,1,1,"05/31/2020",938,4,"Common Ringlet",1,1,1,NA
+2020,1,1,"05/31/2020",938,4,"Variegated Fritillary",1,1,1,NA
+2020,1,1,"05/31/2020",938,4,"White species",1,0,1,NA
+2020,1,1,"05/31/2020",826,5,"Checkered White",1,1,1,"White species"
+2020,1,1,"05/31/2020",826,5,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,1,1,"05/31/2020",826,5,"Variegated Fritillary",1,1,1,NA
+2020,1,1,"05/31/2020",817,6,"Variegated Fritillary",2,1,1,NA
+2020,1,1,"05/31/2020",811,7,"Checkered White",1,1,1,"White species"
+2020,1,1,"05/31/2020",811,7,"Two-Tailed Swallowtail",1,1,1,NA
+2020,1,1,"05/31/2020",811,7,"Variegated Fritillary",1,1,1,NA
+2020,1,1,"05/31/2020",800,8,"Checkered White",1,1,1,"White species"
+2020,2,2,"06/16/2020",800,1,"Butterfly species",1,0,0,NA
+2020,2,2,"06/16/2020",800,1,"Variegated Fritillary",9,1,1,NA
+2020,2,2,"06/16/2020",800,1,"Western White",1,1,1,"White species"
+2020,2,2,"06/16/2020",810,2,"Cabbage White",1,1,1,"White species"
+2020,2,2,"06/16/2020",810,2,"Clouded Sulphur",1,1,1,"Sulphur species"
+2020,2,2,"06/16/2020",810,2,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,2,2,"06/16/2020",810,2,"Orange Sulphur",2,1,1,"Sulphur species"
+2020,2,2,"06/16/2020",810,2,"Variegated Fritillary",21,1,1,NA
+2020,2,2,"06/16/2020",810,2,"Western White",3,1,1,"White species"
+2020,2,2,"06/16/2020",820,3,"Clouded Sulphur",2,1,1,"Sulphur species"
+2020,2,2,"06/16/2020",820,3,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,2,2,"06/16/2020",820,3,"Variegated Fritillary",16,1,1,NA
+2020,2,2,"06/16/2020",820,3,"Western White",1,1,1,"White species"
+2020,2,2,"06/16/2020",832,4,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2020,2,2,"06/16/2020",832,4,"Variegated Fritillary",33,1,1,NA
+2020,2,2,"06/16/2020",905,5,"Arogos Skipper",1,1,1,NA
+2020,2,2,"06/16/2020",905,5,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2020,2,2,"06/16/2020",905,5,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,2,2,"06/16/2020",905,5,"Silver-spotted Skipper",3,1,1,NA
+2020,2,2,"06/16/2020",905,5,"Variegated Fritillary",17,1,1,NA
+2020,2,2,"06/16/2020",905,5,"Western White",4,1,1,"White species"
+2020,2,2,"06/16/2020",917,6,"Clouded Sulphur",1,1,1,"Sulphur species"
+2020,2,2,"06/16/2020",917,6,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2020,2,2,"06/16/2020",917,6,"Variegated Fritillary",28,1,1,NA
+2020,2,2,"06/16/2020",917,6,"Western White",2,1,1,"White species"
+2020,2,2,"06/16/2020",942,7,"Taxiles Skipper",1,1,1,NA
+2020,2,2,"06/16/2020",942,7,"Variegated Fritillary",22,1,1,NA
+2020,2,2,"06/16/2020",942,7,"Western White",1,1,1,"White species"
+2020,2,2,"06/16/2020",954,8,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2020,2,2,"06/16/2020",954,8,"Two-Tailed Swallowtail",1,1,1,NA
+2020,2,2,"06/16/2020",954,8,"Variegated Fritillary",18,1,1,NA
+2020,2,2,"06/16/2020",954,8,"Western Tiger Swallowtail",1,1,1,NA
+2020,2,2,"06/16/2020",954,8,"Western White",1,1,1,"White species"
+2020,3,3,"07/02/2020",900,1,"Clouded Sulphur",5,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",900,1,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",900,1,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",900,1,"Variegated Fritillary",44,1,1,NA
+2020,3,3,"07/02/2020",900,1,"Western White",6,1,1,"White species"
+2020,3,3,"07/02/2020",910,2,"Arogos Skipper",2,1,1,NA
+2020,3,3,"07/02/2020",910,2,"Cabbage White",1,1,1,"White species"
+2020,3,3,"07/02/2020",910,2,"Checkered White",6,1,1,"White species"
+2020,3,3,"07/02/2020",910,2,"Clouded Sulphur",4,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",910,2,"Common Wood-Nymph",2,1,1,NA
+2020,3,3,"07/02/2020",910,2,"Green Skipper",1,1,1,NA
+2020,3,3,"07/02/2020",910,2,"Northwestern Fritillary",5,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",910,2,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",910,2,"Variegated Fritillary",70,1,1,NA
+2020,3,3,"07/02/2020",920,3,"Cabbage White",1,1,1,"White species"
+2020,3,3,"07/02/2020",920,3,"Checkered White",2,1,1,"White species"
+2020,3,3,"07/02/2020",920,3,"Clouded Sulphur",3,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",920,3,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",920,3,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",920,3,"Variegated Fritillary",30,1,1,NA
+2020,3,3,"07/02/2020",935,4,"Checkered White",1,1,1,"White species"
+2020,3,3,"07/02/2020",935,4,"Common Wood-Nymph",2,1,1,NA
+2020,3,3,"07/02/2020",935,4,"Northwestern Fritillary",4,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",935,4,"Variegated Fritillary",14,1,1,NA
+2020,3,3,"07/02/2020",935,4,"Western White",1,1,1,"White species"
+2020,3,3,"07/02/2020",935,4,"White species",1,0,1,NA
+2020,3,3,"07/02/2020",745,5,"Common Wood-Nymph",1,1,1,NA
+2020,3,3,"07/02/2020",745,5,"Hackberry Emperor",1,1,1,NA
+2020,3,3,"07/02/2020",745,5,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",745,5,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",745,5,"Variegated Fritillary",26,1,1,NA
+2020,3,3,"07/02/2020",745,5,"White species",5,0,1,NA
+2020,3,3,"07/02/2020",800,6,"Arogos Skipper",1,1,1,NA
+2020,3,3,"07/02/2020",800,6,"Checkered White",1,1,1,"White species"
+2020,3,3,"07/02/2020",800,6,"Clouded Sulphur",5,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",800,6,"Common Wood-Nymph",1,1,1,NA
+2020,3,3,"07/02/2020",800,6,"Hackberry Emperor",1,1,1,NA
+2020,3,3,"07/02/2020",800,6,"Northwestern Fritillary",5,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",800,6,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",800,6,"Variegated Fritillary",36,1,1,NA
+2020,3,3,"07/02/2020",800,6,"Western White",1,1,1,"White species"
+2020,3,3,"07/02/2020",820,7,"Checkered White",3,1,1,"White species"
+2020,3,3,"07/02/2020",820,7,"Hackberry Emperor",1,1,1,NA
+2020,3,3,"07/02/2020",820,7,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",820,7,"Two-Tailed Swallowtail",1,1,1,NA
+2020,3,3,"07/02/2020",820,7,"Variegated Fritillary",5,1,1,NA
+2020,3,3,"07/02/2020",835,8,"Checkered White",1,1,1,"White species"
+2020,3,3,"07/02/2020",835,8,"Clouded Sulphur",1,1,1,"Sulphur species"
+2020,3,3,"07/02/2020",835,8,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2020,3,3,"07/02/2020",835,8,"Variegated Fritillary",8,1,1,NA
+2020,3,3,"07/02/2020",835,8,"Western White",1,1,1,"White species"
+2020,4,4,"07/16/2020",832,1,"Checkered White",1,1,1,"White species"
+2020,4,4,"07/16/2020",832,1,"Clouded Sulphur",3,1,1,"Sulphur species"
+2020,4,4,"07/16/2020",832,1,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2020,4,4,"07/16/2020",832,1,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,4,4,"07/16/2020",832,1,"Two-Tailed Swallowtail",1,1,1,NA
+2020,4,4,"07/16/2020",832,1,"Variegated Fritillary",16,1,1,NA
+2020,4,4,"07/16/2020",832,1,"Western White",2,1,1,"White species"
+2020,4,4,"07/16/2020",832,1,"White species",1,0,1,NA
+2020,4,4,"07/16/2020",824,2,"Cabbage White",3,1,1,"White species"
+2020,4,4,"07/16/2020",824,2,"Clouded Sulphur",10,1,1,"Sulphur species"
+2020,4,4,"07/16/2020",824,2,"Common Wood-Nymph",3,1,1,NA
+2020,4,4,"07/16/2020",824,2,"Hackberry Emperor",2,1,1,NA
+2020,4,4,"07/16/2020",824,2,"Northwestern Fritillary",9,1,1,"Speyeria species"
+2020,4,4,"07/16/2020",824,2,"Orange Sulphur",7,1,1,"Sulphur species"
+2020,4,4,"07/16/2020",824,2,"Speyeria species",2,0,1,NA
+2020,4,4,"07/16/2020",824,2,"Variegated Fritillary",56,1,1,NA
+2020,4,4,"07/16/2020",824,2,"Western White",1,1,1,"White species"
+2020,4,4,"07/16/2020",824,2,"White species",1,0,1,NA
+2020,4,4,"07/16/2020",808,3,"Checkered White",1,1,1,"White species"
+2020,4,4,"07/16/2020",808,3,"Clouded Sulphur",9,1,1,"Sulphur species"
+2020,4,4,"07/16/2020",808,3,"Common Checkered-Skipper",1,1,1,NA
+2020,4,4,"07/16/2020",808,3,"Common Wood-Nymph",4,1,1,NA
+2020,4,4,"07/16/2020",808,3,"Hackberry Emperor",1,1,1,NA
+2020,4,4,"07/16/2020",808,3,"Melissa Blue",3,1,1,"Blue species"
+2020,4,4,"07/16/2020",808,3,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,4,4,"07/16/2020",808,3,"Orange Sulphur",6,1,1,"Sulphur species"
+2020,4,4,"07/16/2020",808,3,"Variegated Fritillary",6,1,1,NA
+2020,4,4,"07/16/2020",808,3,"White species",1,0,1,NA
+2020,4,4,"07/16/2020",747,4,"Common Wood-Nymph",2,1,1,NA
+2020,4,4,"07/16/2020",747,4,"Dark Wood-Nymph",1,1,1,NA
+2020,4,4,"07/16/2020",747,4,"Hackberry Emperor",1,1,1,NA
+2020,4,4,"07/16/2020",747,4,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2020,4,4,"07/16/2020",747,4,"Variegated Fritillary",7,1,1,NA
+2020,4,4,"07/16/2020",747,4,"White species",1,0,1,NA
+2020,4,4,"07/17/2020",935,5,"Aphrodite Fritillary",1,1,1,"Speyeria species"
+2020,4,4,"07/17/2020",935,5,"Cabbage White",1,1,1,"White species"
+2020,4,4,"07/17/2020",935,5,"Common Checkered-Skipper",1,1,1,NA
+2020,4,4,"07/17/2020",935,5,"Variegated Fritillary",11,1,1,NA
+2020,4,4,"07/17/2020",935,5,"Western White",2,1,1,"White species"
+2020,4,4,"07/17/2020",935,5,"White species",1,0,1,NA
+2020,4,4,"07/17/2020",924,6,"Common Checkered-Skipper",1,1,1,NA
+2020,4,4,"07/17/2020",924,6,"Dark Wood-Nymph",1,1,1,NA
+2020,4,4,"07/17/2020",924,6,"Variegated Fritillary",13,1,1,NA
+2020,4,4,"07/17/2020",924,6,"Western White",1,1,1,"White species"
+2020,4,4,"07/17/2020",853,8,"Variegated Fritillary",2,1,1,NA
+2020,5,5,"07/27/2020",850,1,"Common Checkered-Skipper",1,1,1,NA
+2020,5,5,"07/27/2020",900,2,"Cabbage White",1,1,1,"White species"
+2020,5,5,"07/27/2020",900,2,"Clouded Sulphur",1,1,1,"Sulphur species"
+2020,5,5,"07/27/2020",900,2,"Dainty Sulphur",1,1,1,"Sulphur species"
+2020,5,5,"07/27/2020",900,2,"Gorgone Checkerspot",1,1,1,NA
+2020,5,5,"07/27/2020",900,2,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2020,5,5,"07/27/2020",900,2,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,5,5,"07/27/2020",900,2,"Sulphur species",3,0,1,NA
+2020,5,5,"07/27/2020",900,2,"Variegated Fritillary",3,1,1,NA
+2020,5,5,"07/27/2020",910,3,"Common Checkered-Skipper",6,1,1,NA
+2020,5,5,"07/27/2020",910,3,"Common Wood-Nymph",2,1,1,NA
+2020,5,5,"07/27/2020",910,3,"Melissa Blue",4,1,1,"Blue species"
+2020,5,5,"07/27/2020",910,3,"Orange Sulphur",2,1,1,"Sulphur species"
+2020,5,5,"07/27/2020",910,3,"Variegated Fritillary",5,1,1,NA
+2020,5,5,"07/27/2020",910,3,"White species",1,0,1,NA
+2020,5,5,"07/27/2020",817,5,"Cabbage White",1,1,1,"White species"
+2020,5,5,"07/27/2020",817,5,"Common Wood-Nymph",1,1,1,NA
+2020,5,5,"07/27/2020",817,5,"Gray Copper",1,1,1,NA
+2020,5,5,"07/27/2020",817,5,"Hackberry Emperor",2,1,1,NA
+2020,5,5,"07/27/2020",817,5,"Orange Sulphur",2,1,1,"Sulphur species"
+2020,5,5,"07/27/2020",817,5,"Variegated Fritillary",3,1,1,NA
+2020,5,5,"07/27/2020",817,5,"Western White",1,1,1,"White species"
+2020,5,5,"07/27/2020",817,5,"White species",1,0,1,NA
+2020,5,5,"07/27/2020",815,6,"Common Checkered-Skipper",1,1,1,NA
+2020,5,5,"07/27/2020",815,6,"Hackberry Emperor",1,1,1,NA
+2020,5,5,"07/27/2020",815,6,"Variegated Fritillary",6,1,1,NA
+2020,5,5,"07/27/2020",745,8,"Common Checkered-Skipper",2,1,1,NA
+2020,6,6,"08/10/2020",815,2,"Cabbage White",1,1,1,"White species"
+2020,6,6,"08/10/2020",815,2,"Common Checkered-Skipper",8,1,1,NA
+2020,6,6,"08/10/2020",815,2,"Orange Sulphur",1,1,1,"Sulphur species"
+2020,6,6,"08/10/2020",815,2,"Sulphur species",1,0,1,NA
+2020,6,6,"08/10/2020",810,3,"Common Checkered-Skipper",15,1,1,NA
+2020,6,6,"08/10/2020",810,3,"Melissa Blue",1,1,1,"Blue species"
+2020,6,6,"08/10/2020",745,4,"Small butterfly species",1,0,0,NA
+2020,6,6,"08/10/2020",850,5,"Clouded Sulphur",1,1,1,"Sulphur species"
+2020,6,6,"08/10/2020",850,5,"Common Checkered-Skipper",5,1,1,NA
+2020,6,6,"08/10/2020",850,5,"Dainty Sulphur",1,1,1,"Sulphur species"
+2020,6,6,"08/10/2020",850,5,"Variegated Fritillary",1,1,1,NA
+2020,6,6,"08/10/2020",810,6,"Common Checkered-Skipper",2,1,1,NA
+2020,6,6,"08/10/2020",810,6,"Dainty Sulphur",1,1,1,"Sulphur species"
+2020,6,6,"08/10/2020",945,8,"Common Checkered-Skipper",2,1,1,NA
+2020,6,6,"08/10/2020",945,8,"Reakirt's Blue",1,1,1,"Blue species"
+2021,1,7,"06/05/2021",800,1,"Variegated Fritillary",1,1,1,NA
+2021,1,7,"06/05/2021",810,2,"Variegated Fritillary",1,1,1,NA
+2021,1,7,"06/05/2021",810,2,"White species",1,0,1,NA
+2021,1,7,"06/05/2021",855,5,"White species",1,0,1,NA
+2021,1,7,"06/05/2021",905,6,"Variegated Fritillary",1,1,1,NA
+2021,1,7,"06/05/2021",905,6,"White species",1,0,1,NA
+2021,1,7,"06/05/2021",930,7,"Common Ringlet",1,1,1,NA
+2021,1,7,"06/05/2021",930,7,"Variegated Fritillary",1,1,1,NA
+2021,1,7,"06/05/2021",945,8,"Butterfly species",1,0,0,NA
+2021,1,7,"06/05/2021",945,8,"Melissa Blue",1,1,1,"Blue species"
+2021,1,7,"06/05/2021",945,8,"Variegated Fritillary",1,1,1,NA
+2021,1,7,"06/05/2021",945,8,"White species",1,0,1,NA
+2021,2,8,"06/16/2021",930,1,"Clouded Sulphur",1,1,1,"Sulphur species"
+2021,2,8,"06/16/2021",930,1,"Common Checkered-Skipper",1,1,1,NA
+2021,2,8,"06/16/2021",930,1,"Dainty Sulphur",1,1,1,"Sulphur species"
+2021,2,8,"06/16/2021",930,1,"Orange Sulphur",1,1,1,"Sulphur species"
+2021,2,8,"06/16/2021",930,1,"Variegated Fritillary",2,1,1,NA
+2021,2,8,"06/16/2021",920,2,"Cabbage White",2,1,1,"White species"
+2021,2,8,"06/16/2021",920,2,"Clouded Sulphur",2,1,1,"Sulphur species"
+2021,2,8,"06/16/2021",920,2,"Large marble",1,1,1,NA
+2021,2,8,"06/16/2021",920,2,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2021,2,8,"06/16/2021",920,2,"Silver-spotted Skipper",1,1,1,NA
+2021,2,8,"06/16/2021",920,2,"Taxiles Skipper",1,1,1,NA
+2021,2,8,"06/16/2021",920,2,"Variegated Fritillary",2,1,1,NA
+2021,2,8,"06/16/2021",910,3,"Cabbage White",2,1,1,"White species"
+2021,2,8,"06/16/2021",910,3,"Common Checkered-Skipper",2,1,1,NA
+2021,2,8,"06/16/2021",910,3,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2021,2,8,"06/16/2021",910,3,"Orange Sulphur",3,1,1,"Sulphur species"
+2021,2,8,"06/16/2021",910,3,"Variegated Fritillary",2,1,1,NA
+2021,2,8,"06/16/2021",900,4,"Variegated Fritillary",1,1,1,NA
+2021,2,8,"06/16/2021",830,5,"Common Checkered-Skipper",2,1,1,NA
+2021,2,8,"06/16/2021",830,5,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2021,2,8,"06/16/2021",830,5,"Orange Sulphur",1,1,1,"Sulphur species"
+2021,2,8,"06/16/2021",830,5,"Variegated Fritillary",3,1,1,NA
+2021,2,8,"06/16/2021",820,6,"Common Checkered-Skipper",1,1,1,NA
+2021,2,8,"06/16/2021",820,6,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2021,2,8,"06/16/2021",820,6,"Variegated Fritillary",19,1,1,NA
+2021,2,8,"06/16/2021",755,7,"Common Checkered-Skipper",1,1,1,NA
+2021,2,8,"06/16/2021",755,7,"Northwestern Fritillary",5,1,1,"Speyeria species"
+2021,2,8,"06/16/2021",755,7,"Variegated Fritillary",2,1,1,NA
+2021,2,8,"06/16/2021",755,7,"White species",1,0,1,NA
+2021,2,8,"06/16/2021",745,8,"Northwestern Fritillary",2,1,1,"Speyeria species"
+2021,2,8,"06/16/2021",745,8,"Variegated Fritillary",3,1,1,NA
+2021,3,9,"07/04/2021",815,1,"Dainty Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",815,1,"Monarch",1,1,1,NA
+2021,3,9,"07/04/2021",815,1,"Painted Lady",1,1,1,NA
+2021,3,9,"07/04/2021",815,1,"Variegated Fritillary",17,1,1,NA
+2021,3,9,"07/04/2021",805,2,"Cabbage White",25,1,1,"White species"
+2021,3,9,"07/04/2021",805,2,"Clouded Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",805,2,"Hackberry Emperor",1,1,1,NA
+2021,3,9,"07/04/2021",805,2,"Large marble",2,1,1,NA
+2021,3,9,"07/04/2021",805,2,"Northwestern Fritillary",4,1,1,"Speyeria species"
+2021,3,9,"07/04/2021",805,2,"Orange Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",805,2,"Red Admiral",2,1,1,NA
+2021,3,9,"07/04/2021",805,2,"Variegated Fritillary",60,1,1,NA
+2021,3,9,"07/04/2021",805,2,"White species",2,0,1,NA
+2021,3,9,"07/04/2021",755,3,"Cabbage White",2,1,1,"White species"
+2021,3,9,"07/04/2021",755,3,"Gray Hairstreak",1,1,1,NA
+2021,3,9,"07/04/2021",755,3,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2021,3,9,"07/04/2021",755,3,"Orange Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",755,3,"Red Admiral",1,1,1,NA
+2021,3,9,"07/04/2021",755,3,"Small Wood Nymph",1,1,1,NA
+2021,3,9,"07/04/2021",755,3,"Variegated Fritillary",40,1,1,NA
+2021,3,9,"07/04/2021",745,4,"Clouded Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",745,4,"Variegated Fritillary",60,1,1,NA
+2021,3,9,"07/04/2021",920,5,"Arogos Skipper",2,1,1,NA
+2021,3,9,"07/04/2021",920,5,"Cabbage White",2,1,1,"White species"
+2021,3,9,"07/04/2021",920,5,"Hackberry Emperor",2,1,1,NA
+2021,3,9,"07/04/2021",920,5,"Northwestern Fritillary",5,1,1,"Speyeria species"
+2021,3,9,"07/04/2021",920,5,"Variegated Fritillary",80,1,1,NA
+2021,3,9,"07/04/2021",910,6,"Arogos Skipper",2,1,1,NA
+2021,3,9,"07/04/2021",910,6,"Cabbage White",1,1,1,"White species"
+2021,3,9,"07/04/2021",910,6,"Common Checkered-Skipper",1,1,1,NA
+2021,3,9,"07/04/2021",910,6,"Hackberry Emperor",2,1,1,NA
+2021,3,9,"07/04/2021",910,6,"Northwestern Fritillary",6,1,1,"Speyeria species"
+2021,3,9,"07/04/2021",910,6,"Red Admiral",1,1,1,NA
+2021,3,9,"07/04/2021",910,6,"Variegated Fritillary",18,1,1,NA
+2021,3,9,"07/04/2021",900,7,"Arogos Skipper",3,1,1,NA
+2021,3,9,"07/04/2021",900,7,"Clouded Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",900,7,"Northwestern Fritillary",6,1,1,"Speyeria species"
+2021,3,9,"07/04/2021",900,7,"Variegated Fritillary",30,1,1,NA
+2021,3,9,"07/04/2021",900,7,"White species",2,0,1,NA
+2021,3,9,"07/04/2021",850,8,"Northwestern Fritillary",6,1,1,"Speyeria species"
+2021,3,9,"07/04/2021",850,8,"Orange Sulphur",1,1,1,"Sulphur species"
+2021,3,9,"07/04/2021",850,8,"Variegated Fritillary",45,1,1,NA
+2021,4,10,"07/19/2021",915,1,"Cabbage White",2,1,1,"White species"
+2021,4,10,"07/19/2021",915,1,"Dainty Sulphur",8,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",915,1,"Northwestern Fritillary",4,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",915,1,"Orange Sulphur",2,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",915,1,"Red Admiral",1,1,1,NA
+2021,4,10,"07/19/2021",915,1,"Variegated Fritillary",45,1,1,NA
+2021,4,10,"07/19/2021",915,1,"White species",2,0,1,NA
+2021,4,10,"07/19/2021",930,2,"Blue species",3,0,1,NA
+2021,4,10,"07/19/2021",930,2,"Cabbage White",6,1,1,"White species"
+2021,4,10,"07/19/2021",930,2,"Clouded Sulphur",1,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",930,2,"Common Wood-Nymph",3,1,1,NA
+2021,4,10,"07/19/2021",930,2,"Dainty Sulphur",3,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",930,2,"Hackberry Emperor",1,1,1,NA
+2021,4,10,"07/19/2021",930,2,"Northern Crescent",1,1,1,NA
+2021,4,10,"07/19/2021",930,2,"Northwestern Fritillary",4,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",930,2,"Orange Sulphur",2,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",930,2,"Variegated Fritillary",60,1,1,NA
+2021,4,10,"07/19/2021",940,3,"Cabbage White",3,1,1,"White species"
+2021,4,10,"07/19/2021",940,3,"Clouded Sulphur",2,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",940,3,"Common Checkered-Skipper",2,1,1,NA
+2021,4,10,"07/19/2021",940,3,"Common Wood-Nymph",3,1,1,NA
+2021,4,10,"07/19/2021",940,3,"Melissa Blue",1,1,1,"Blue species"
+2021,4,10,"07/19/2021",940,3,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",940,3,"Orange Sulphur",4,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",940,3,"Small Wood Nymph",1,1,1,NA
+2021,4,10,"07/19/2021",940,3,"Variegated Fritillary",45,1,1,NA
+2021,4,10,"07/19/2021",955,4,"Cabbage White",3,1,1,"White species"
+2021,4,10,"07/19/2021",955,4,"Dainty Sulphur",1,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",955,4,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",955,4,"Orange Sulphur",1,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",955,4,"Variegated Fritillary",20,1,1,NA
+2021,4,10,"07/19/2021",955,4,"White species",2,0,1,NA
+2021,4,10,"07/19/2021",800,5,"Arogos Skipper",1,1,1,NA
+2021,4,10,"07/19/2021",800,5,"Cabbage White",2,1,1,"White species"
+2021,4,10,"07/19/2021",800,5,"Common Checkered-Skipper",1,1,1,NA
+2021,4,10,"07/19/2021",800,5,"Common Wood-Nymph",2,1,1,NA
+2021,4,10,"07/19/2021",800,5,"Gray Copper",1,1,1,NA
+2021,4,10,"07/19/2021",800,5,"Monarch",1,1,1,NA
+2021,4,10,"07/19/2021",800,5,"Northwestern Fritillary",4,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",800,5,"Variegated Fritillary",39,1,1,NA
+2021,4,10,"07/19/2021",745,6,"Blue species",3,0,1,NA
+2021,4,10,"07/19/2021",745,6,"Cabbage White",1,1,1,"White species"
+2021,4,10,"07/19/2021",745,6,"Northwestern Fritillary",1,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",745,6,"Variegated Fritillary",49,1,1,NA
+2021,4,10,"07/19/2021",825,7,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",825,7,"Orange Sulphur",2,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",825,7,"Variegated Fritillary",15,1,1,NA
+2021,4,10,"07/19/2021",840,8,"Cabbage White",2,1,1,"White species"
+2021,4,10,"07/19/2021",840,8,"Clouded Sulphur",1,1,1,"Sulphur species"
+2021,4,10,"07/19/2021",840,8,"Northwestern Fritillary",3,1,1,"Speyeria species"
+2021,4,10,"07/19/2021",840,8,"Variegated Fritillary",21,1,1,NA

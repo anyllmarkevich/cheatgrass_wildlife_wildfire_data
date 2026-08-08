@@ -1,0 +1,11 @@
+"year","survey_order","survey_number","start_time","end_time","low_temp","high_temp","wind_speed","wind_direction","low_cloud_cover","high_cloud_cover","multiple_dates"
+2020,1,1,800,950,24,27,"4-10","East",20,20,0
+2020,2,2,800,1000,21,26,"calm","None",35,35,0
+2020,3,3,745,945,25,28,"calm","None",15,15,0
+2020,4,4,745,945,25,33,"calm","None",10,10,1
+2020,5,5,745,930,24,27,"4-10","North",5,35,0
+2020,6,6,745,945,21,24,"4-10","North",5,10,0
+2021,1,7,800,955,20,23,"0-5","Variable",20,20,0
+2021,2,8,745,930,26,28,"calm","None",0,0,0
+2021,3,9,745,930,20,24,"calm","None",0,0,0
+2021,4,10,745,1000,23,32,"calm","None",0,0,0
