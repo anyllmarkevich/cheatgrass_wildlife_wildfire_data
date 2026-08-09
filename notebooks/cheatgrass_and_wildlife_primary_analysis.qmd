@@ -1,0 +1,58 @@
+---
+title: "Primary Analysis: Cheatgrass and Wildlife"
+author: "Anyll Markevich"
+format: html
+editor: visual
+---
+
+# Primary Analysis: Cheatgrass and Wildlife
+
+## Setup
+
+### Libraries
+
+```{r}
+#| output: false
+library(here)
+```
+
+### Data Processing
+
+The first step is to process raw data (found in `/data/raw/`) into analysis ready formats (saved to `/data/processed/`), all following tidy data conventions.
+
+```{r}
+#| output: false
+source(here::here("R", "01_vegetation_survey_processing.R"))
+source(here::here("R", "02_bird_count_processing.R"))
+source(here::here("R", "03_butterfly_count_processing.R"))
+source(here::here("R", "04_mammal_count_processing.R"))
+source(here::here("R", "05_additional_data_processing.R"))
+```
+
+This tidy data can then be converted into summary tables that formatted for the following analysis (saved to `/data/summarized/`).
+
+```{r}
+#| output: false
+source(here::here("R", "06_summarize_for_analysis.R"))
+```
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
