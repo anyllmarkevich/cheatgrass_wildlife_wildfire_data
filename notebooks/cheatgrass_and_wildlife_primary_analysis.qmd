@@ -7,6 +7,10 @@ editor: visual
 
 # Primary Analysis: Cheatgrass and Wildlife
 
+## Objective
+
+MENTION RESEARCH PAPER! This document details the analysis steps used to test whther observational data is consistent with the hypothesis that cheatgrass negatively impacts large mammals, birds, butterflies. More specifically, we test whether areas with higher cheatgrass cover correlate with lower abundance and species richness of the these three taxa. Although this is an observational study that cannot confidently draw causational conclusions, this analysis will compare the statistical explanatory power of cheatgrass cover against multiple other potentially relevant environmental factors to determine which factors are most likely to be causational.
+
 ## Setup
 
 ### Libraries
@@ -14,6 +18,7 @@ editor: visual
 ```{r}
 #| output: false
 library(here)
+library(dplyr)
 ```
 
 ### Data Processing
@@ -34,6 +39,22 @@ This tidy data can then be converted into summary tables that formatted for the 
 ```{r}
 #| output: false
 source(here::here("R", "06_summarize_for_analysis.R"))
+```
+
+### Import Data
+
+The analysis will require the summarized data for the primary analysis and a small data table that contains metadata about each column. This metadata will allow easy selection of just predictor our outcome variables, for instance, allowing for automation of repeated analyses.
+
+```{r}
+#| output: false
+original_data <- read.csv(here::here(
+  "data", 
+  "summarized", 
+  "main_summary.csv"))
+original_data_columns <- read.csv(here::here(
+  "data", 
+  "summarized", 
+  "main_summary_columns.csv"))
 ```
 
 ## Quarto
