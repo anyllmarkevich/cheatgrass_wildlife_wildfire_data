@@ -100,9 +100,9 @@ for (this_year in unique(metadata$year)) {
   for (this_plot in unique(transect_count_data$plot)) {
     # Extract data relevant to a specific plot in a specific year
     plot_transect_count_data <- subset(transect_count_data, year == this_year & plot == this_plot & survey_order <= 4)
-    # Calculate summary statistics: number of individuals observed and species richness
-    butterfly_count <- sum(plot_transect_count_data$count) / max(plot_transect_count_data$survey_order)
-    species_count <- count_species(plot_transect_count_data) / max(plot_transect_count_data$survey_order)
+    # Calculate summary statistics: number of individuals observed and species richness. Un-comment the end of the next two lines of codes to express these values per butterfly count, as opposed to total individual and species counts.
+    butterfly_count <- sum(plot_transect_count_data$count) #/ max(plot_transect_count_data$survey_order)
+    species_count <- count_species(plot_transect_count_data) #/ max(plot_transect_count_data$survey_order)
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, butterfly_count, species_count)
   }

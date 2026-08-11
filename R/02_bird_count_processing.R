@@ -61,12 +61,12 @@ for (this_year in unique(metadata$year)) {
   for (this_plot in unique(point_count_data$plot)) {
     # Extract data relevant to a specific plot in a specific year
     plot_point_count_data <- subset(point_count_data, year == this_year & plot == this_plot)
-    # Calculate summary statistics: number of individuals observed and species richness
-    bird_count <- sum(plot_point_count_data$count) / max(plot_point_count_data$survey_order)
+    # Calculate summary statistics: number of individuals observed and species richness. Un-comment the end of the next two expressions to express these values per butterfly count, as opposed to total individual and species counts.
+    bird_count <- sum(plot_point_count_data$count) #/ max(plot_point_count_data$survey_order)
     species_count <- plot_point_count_data |>
       subset(!is.na(alpha_code), select = alpha_code) |>
       unique() |>
-      nrow() / max(plot_point_count_data$survey_order)
+      nrow() #/ max(plot_point_count_data$survey_order)
     # Save the data
     plot_data[nrow(plot_data) + 1, ] <- c(this_year, this_plot, bird_count, species_count)
   }

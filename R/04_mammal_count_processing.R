@@ -57,7 +57,7 @@ session_from_date_time <- function(date, time, plot, date_table, time_table) {
 
 # 4. PROCESS DATA
 # Reformat 2020 camera trap data from a table of species and observation dates to a list of individual observations. This new format follows tidy data principles and is far more query-able with data analysis software tools
-# NOTE: Due to inferior data collecting methodology in 2020, the specific photos in which animals were observed, along with the exact time these photos were taken, is not included in this data. Procuring this data would require a labor-intensive repeat of manual data collection from photos
+# NOTE: Due to inferior data collecting methodology in 2020, the specific photos in which animals were observed, along with the exact time these photos were taken, is not included in the 2020 data entries. Procuring this data would require a labor-intensive repeat of manual data collection from photos
 trailcam_photo_data <- data.frame(matrix(ncol = 7, nrow = 0))
 # For each time period (usually a day) listed in the data (each is a column), extract the data and reformat it
 for (time_code in dates_2020$Time.Code) {

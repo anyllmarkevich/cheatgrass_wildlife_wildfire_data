@@ -9,7 +9,7 @@ editor: visual
 
 ## Objective
 
-MENTION RESEARCH PAPER! This document details the analysis steps used to test whther observational data is consistent with the hypothesis that cheatgrass negatively impacts large mammals, birds, butterflies. More specifically, we test whether areas with higher cheatgrass cover correlate with lower abundance and species richness of the these three taxa. Although this is an observational study that cannot confidently draw causational conclusions, this analysis will compare the statistical explanatory power of cheatgrass cover against multiple other potentially relevant environmental factors to determine which factors are most likely to be causational.
+MENTION RESEARCH PAPER! This document details the analysis steps used to test wether observational data is consistent with the hypothesis that cheatgrass negatively impacts large mammals, birds, butterflies. More specifically, we test whether areas with higher cheatgrass cover correlate with lower abundance and species richness of the these three taxa. Although this is an observational study that cannot confidently draw causational conclusions, this analysis will compare the statistical explanatory power of cheatgrass cover against multiple other potentially relevant environmental factors to determine which factors are most likely to be causational. We will use Bayesian Model Averaging to achieve this objective.
 
 ## Setup
 
@@ -19,6 +19,9 @@ MENTION RESEARCH PAPER! This document details the analysis steps used to test wh
 #| output: false
 library(here)
 library(dplyr)
+library(car)
+library(ggplot2)
+library(BMS)
 ```
 
 ### Data Processing
@@ -43,7 +46,7 @@ source(here::here("R", "06_summarize_for_analysis.R"))
 
 ### Import Data
 
-The analysis will require the summarized data for the primary analysis and a small data table that contains metadata about each column. This metadata will allow easy selection of just predictor our outcome variables, for instance, allowing for automation of repeated analyses.
+The analysis will require the summarized data for the primary analysis and a small data table that contains metadata about each column. This metadata will allow easy selection of just predictor our response variables, for instance, allowing for automation of repeated analyses.
 
 ```{r}
 #| output: false
@@ -57,23 +60,98 @@ original_data_columns <- read.csv(here::here(
   "main_summary_columns.csv"))
 ```
 
-## Quarto
+Note that this summary data only includes 4 of the 6 butterfly surveys conducted in 2020 to keep the methodology consistent with the 4 total butterfly surveys conducted in 2021.
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+### Calculate Metrics
 
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Currently, cheatgrass cover is expressed as two separate values: cheatgrass plant cover and cheatgrass litter cover. Although distinguishing between these two types of cheatgrass prevalence could provide valuable ecological insight, this analysis aims to capture the overall impact of cheatgrass on wildlife. Thus, we will calculate and include a total cheatgrass cover value by summing the two cheatgrass metrics.
 
 ```{r}
-1 + 1
+data <- original_data
+data$cheatgrass_total <- data$cheatgrass_plant + data$cheatgrass_litter
 ```
 
-You can add options to executable code like this
+Lastly, I will update the metadata table to include these new data columns.
 
 ```{r}
-#| echo: false
-2 * 2
+data_columns <- original_data_columns
+data_columns[nrow(data_columns) + 1, ] <- c("cheatgrass_total", "predictor")
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+### Avoiding Regression Singularity
+
+To avoid singularity in the vegetation data, we will only include metrics directly relevant to cheatgrass and bare ground, removing the measurments of non-cheatgrass plant cover and non-cheatgrass litter cover. An additional singularity remains because `cheatgrass_total = cheatgrass_plan + cheatgrass_litter`, but this will be addressed later alongside for why certain predictors were kept in the final analysis.
+
+```{r}
+data <- data %>% select(- other_litter, - other_plant)
+data_columns <- data_columns %>% subset(!(column %in% c("other_litter", "other_plant")))
+```
+
+### Prepare Data
+
+SCALE DATA???
+
+### Create Labels
+
+```{r}
+data_columns$label <- NA
+data_columns$label[which(data_columns$type == "response")] <- c("Mammal Count", "Mammal Species Richness", "Bird Count", "Bird Species Richness", "Butterfly Count", "Butterfly Species Richness")
+```
+
+## Preparing Analysis
+
+### Addressing Multicollinearity
+
+We will select of set of predictor variables for the analysis that are not strongly correlated with one another — predictor variables with low multicollinearity. Although Bayesian Model Averaging rigorously handles multicollinearity, the results may be more difficult to interpret as statistical power is split across multiple variables. We will use a pearson's correlation coefficient matrix to list all pairs of predictors that have a pearson's correlation coefficient over 0.8.
+
+```{r}
+temp_data <- data %>% 
+  dplyr::select(data_columns$column[which(data_columns$type == "predictor")])
+corr_matrix <- cor(temp_data)
+corr_matrix[upper.tri(corr_matrix, diag = TRUE)] <- NA
+indices <- which(corr_matrix >= 0.8, arr.ind=TRUE)
+cat(
+  paste("Pairs of preditors with a correlation coefficient greater than or equal to 0.8:",
+  paste(
+    rownames(corr_matrix)[indices[,1]], 
+    colnames(corr_matrix)[indices[,2]], sep = " and ", collapse = ",\n"
+    ), 
+  sep = "\n")
+  )
+```
+
+All the cheatgrass cover variables are strongly correlated with one another (and form a regression singularity), so we will only keep the total cheatgrass cover metric (`cheatgrass_total`). The strong correlation between cheatgrass plants and litter suggest that this study is not capable of distinguishing between the ecological impact of these types of ground cover. Thus, we opt to use the sum of these two values as this combined metric is more likely to show a statistical relationship with the abundance and species richness of any taxa impacted by either or both cheatgrass plants and cheatgrass litter.
+
+Similarly, as plot slope and the distance between the plot and the nearest highway are highly correlated due to the mountain geography in the study area, we will only keep the slope predictor (`slope`). Distance to the highway was originally included in case mammals were afraid of human activity, but we had no evidence that this was the case, so we will keep slope as it is a more ecologically relevant predictor.
+
+```{r}
+data <- data %>%
+  dplyr::select(- cheatgrass_litter, - cheatgrass_plant, - distance_to_highway)
+data_columns <- data_columns %>% subset(!(column %in% c("cheatgrass_litter", "cheatgrass_plant", "distance_to_highway")))
+```
+
+To ensure the multicollinearity won't be an issue, we will run a second test to ensure that all Variance Inflation Factor values are below 5.
+
+```{r}
+temp_data <- data %>% select(data_columns$column[which(data_columns$type == "predictor")])
+temp_data$example_response <- 1:16 # Create a dummy response, as it doesn't matter here
+mod <- lm(example_response ~ ., data = temp_data)
+cat(paste("All VIF values are less then 5:", all(car::vif(mod) < 5)))
+```
+
+Most tests for linearity require more degrees of freedom to provide reliable results than can be spared in our small dataset. Thus, we take a visual estimation approach, checking partial regression plots for any obvious nonlinearity.
+
+```{r}
+#| fig-height: 8
+for (response in data_columns$column[which(data_columns$type == "response")]) {
+  temp_data <- data %>% select(all_of(response), all_of(selected_predictors))
+  mod <- lm(temp_data)
+  car::avPlots(mod, main = paste(
+    "Partial Regression for", 
+    data_columns$label[which(data_columns$column == response)]))
+}
+```
+
+We will test for heteroskedasticity and ensure normally distributed residuals during the analysis itself.
+
+## Analysis
