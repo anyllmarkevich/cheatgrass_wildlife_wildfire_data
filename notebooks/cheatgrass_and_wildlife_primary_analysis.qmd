@@ -83,7 +83,8 @@ data_columns[nrow(data_columns) + 1, ] <- c("cheatgrass_total", "predictor")
 To avoid singularity in the vegetation data, we will only include metrics directly relevant to cheatgrass and bare ground, removing the measurments of non-cheatgrass plant cover and non-cheatgrass litter cover. An additional singularity remains because `cheatgrass_total = cheatgrass_plan + cheatgrass_litter`, but this will be addressed later alongside for why certain predictors were kept in the final analysis.
 
 ```{r}
-data <- data %>% select(- other_litter, - other_plant)
+data <- data %>% 
+  dplyr::select(- other_litter, - other_plant)
 data_columns <- data_columns %>% subset(!(column %in% c("other_litter", "other_plant")))
 ```
 
@@ -99,6 +100,20 @@ data_columns$label[which(data_columns$type == "response")] <- c("Mammal Count", 
 ```
 
 ## Preparing Analysis
+
+### Data Transformations
+
+All the response variables are counts and therefore theoretically follow a Poisson distribution instead of a Gaussian distribution. Although it would be possible to run Bayesian Model Averaging with a Poisson-based GLM using the BMA package, we had significant overfitting issues when using this package. Meanwhile, the BMS package, which does not support Poisson distributions, provided enough control over priors for us to prevent large models from having high influence over the outcomes. Thus, we will use an Anscombe transform on response variables with low means (less than 15) to approximate a gaussian distribution from count data. Zero inflation is not an issue in any of these data.
+
+CHECK THE 15 VALUE
+
+```{r}
+non_gaussian_column_ids <- which(
+  colMeans(data) < 15 & 
+    colnames(data) %in% subset(data_columns, type == "response")$column
+  )
+data[, non_gaussian_column_ids] <- 2*sqrt(data[, non_gaussian_column_ids] + (3/8))
+```
 
 ### Addressing Multicollinearity
 
@@ -130,10 +145,19 @@ data <- data %>%
 data_columns <- data_columns %>% subset(!(column %in% c("cheatgrass_litter", "cheatgrass_plant", "distance_to_highway")))
 ```
 
+TEMP:
+
+```{r}
+data <- data %>%
+  dplyr::select(- living_woody_cover)
+data_columns <- data_columns %>% subset(!(column %in% c("living_woody_cover")))
+```
+
 To ensure the multicollinearity won't be an issue, we will run a second test to ensure that all Variance Inflation Factor values are below 5.
 
 ```{r}
-temp_data <- data %>% select(data_columns$column[which(data_columns$type == "predictor")])
+temp_data <- data %>% 
+  dplyr::select(data_columns$column[which(data_columns$type == "predictor")])
 temp_data$example_response <- 1:16 # Create a dummy response, as it doesn't matter here
 mod <- lm(example_response ~ ., data = temp_data)
 cat(paste("All VIF values are less then 5:", all(car::vif(mod) < 5)))
@@ -144,7 +168,12 @@ Most tests for linearity require more degrees of freedom to provide reliable res
 ```{r}
 #| fig-height: 8
 for (response in data_columns$column[which(data_columns$type == "response")]) {
-  temp_data <- data %>% select(all_of(response), all_of(selected_predictors))
+  temp_data <- data %>% 
+    dplyr::select(
+      all_of(response), 
+      all_of(data_columns$column[which(data_columns$type == "predictor")]),
+      all_of(data_columns$column[which(data_columns$type == "category")])
+      )
   mod <- lm(temp_data)
   car::avPlots(mod, main = paste(
     "Partial Regression for", 
@@ -155,3 +184,25 @@ for (response in data_columns$column[which(data_columns$type == "response")]) {
 We will test for heteroskedasticity and ensure normally distributed residuals during the analysis itself.
 
 ## Analysis
+
+```{r}
+#| results: 'asis'
+bms_mods <- list()
+for (response in data_columns$column[which(data_columns$type == "response")]) {
+  #cat("\n\n#### BMS Plots for Response:", data_columns$label[which(data_columns$column == response)], "\n\n\n")
+  analysis_data <- data %>% 
+    dplyr::select(
+      all_of(response), 
+      all_of(data_columns$column[which(data_columns$type == "predictor")]), 
+      all_of(data_columns$column[which(data_columns$type == "category")])
+      )
+  bms_mod <- BMS::bms(analysis_data, mprior = "fixed", mprior.size = 2, mcmc = "enumerate", g = "hyper")
+  image(bms_mod)
+}
+```
+
+THINGS TO DO:
+
+-   Forest plots using density and quartiles functions
+
+-   Check the other assumptions
