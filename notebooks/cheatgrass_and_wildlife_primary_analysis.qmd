@@ -22,6 +22,12 @@ library(dplyr)
 library(car)
 library(ggplot2)
 library(BMS)
+library(performance)
+library(patchwork)
+```
+
+```{r}
+set.seed(60)
 ```
 
 ### Data Processing
@@ -96,20 +102,20 @@ SCALE DATA???
 
 ```{r}
 data_columns$label <- NA
-data_columns$label[which(data_columns$type == "response")] <- c("Mammal Count", "Mammal Species Richness", "Bird Count", "Bird Species Richness", "Butterfly Count", "Butterfly Species Richness")
+data_columns$label[which(data_columns$type %in% c("response", "predictor", "category"))] <- 
+  c("Mammal Count", "Mammal Species Richness", "Bird Count", "Bird Species Richness", "Butterfly Count", "Butterfly Species Richness", "Cheatgrass Plant Cover", "Cheatgrass Litter Cover", "Bare Ground Cover", "Woody Cover", "Living Woody Cover", "Distance to Highway", "Slope", "Year", "Plot in Burn Area", "Plot was Burned", "Cheatgrass Cover")
+data_columns$predictor_order[which(data_columns$type %in% c("predictor", "category"))] <- 
+  c(2, 3, 7, 5, 6 , 9, 8, 10, 11, 12, 1)
 ```
 
 ## Preparing Analysis
 
 ### Data Transformations
 
-All the response variables are counts and therefore theoretically follow a Poisson distribution instead of a Gaussian distribution. Although it would be possible to run Bayesian Model Averaging with a Poisson-based GLM using the BMA package, we had significant overfitting issues when using this package. Meanwhile, the BMS package, which does not support Poisson distributions, provided enough control over priors for us to prevent large models from having high influence over the outcomes. Thus, we will use an Anscombe transform on response variables with low means (less than 15) to approximate a gaussian distribution from count data. Zero inflation is not an issue in any of these data.
-
-CHECK THE 15 VALUE
+All the response variables are counts and therefore theoretically follow a Poisson distribution instead of a Gaussian distribution. Although it would be possible to run Bayesian Model Averaging with a Poisson-based GLM using the BMA package, we had significant overfitting issues when using this package. Meanwhile, the BMS package, which does not support Poisson distributions, provided enough control over priors for us to prevent large models from having high influence over the outcomes. Thus, we will use an Anscombe transform on response variables to approximate a gaussian distribution from count data. Zero inflation is not an issue in any of these data. This is to stablaize variance.
 
 ```{r}
 non_gaussian_column_ids <- which(
-  colMeans(data) < 15 & 
     colnames(data) %in% subset(data_columns, type == "response")$column
   )
 data[, non_gaussian_column_ids] <- 2*sqrt(data[, non_gaussian_column_ids] + (3/8))
@@ -121,7 +127,10 @@ We will select of set of predictor variables for the analysis that are not stron
 
 ```{r}
 temp_data <- data %>% 
-  dplyr::select(data_columns$column[which(data_columns$type == "predictor")])
+  dplyr::select(
+    data_columns$column[which(data_columns$type == "predictor")],
+    data_columns$column[which(data_columns$type == "category")]
+    )
 corr_matrix <- cor(temp_data)
 corr_matrix[upper.tri(corr_matrix, diag = TRUE)] <- NA
 indices <- which(corr_matrix >= 0.8, arr.ind=TRUE)
@@ -145,7 +154,7 @@ data <- data %>%
 data_columns <- data_columns %>% subset(!(column %in% c("cheatgrass_litter", "cheatgrass_plant", "distance_to_highway")))
 ```
 
-TEMP:
+We also exclude the living woody cover predictor variable because it all values are near duplicates of the total woody cover except on the four burned plots post-burn (in 2021). Although living shrubs and trees likely play a different ecological role than their leafless counterparts, both provide shelter and habitat to numerous species.
 
 ```{r}
 data <- data %>%
@@ -157,18 +166,32 @@ To ensure the multicollinearity won't be an issue, we will run a second test to 
 
 ```{r}
 temp_data <- data %>% 
-  dplyr::select(data_columns$column[which(data_columns$type == "predictor")])
-temp_data$example_response <- 1:16 # Create a dummy response, as it doesn't matter here
+  dplyr::select(
+    data_columns$column[which(data_columns$type == "predictor")],
+    data_columns$column[which(data_columns$type == "category")]
+    )
+temp_data$example_response <- 1:nrow(data) # Create a dummy response variable
 mod <- lm(example_response ~ ., data = temp_data)
-cat(paste("All VIF values are less then 5:", all(car::vif(mod) < 5)))
+vif_values <- car::vif(mod)
+cat(paste("Predictors with VIF values greater than 5:", 
+          names(vif_values[which(vif_values > 5)]) 
+          ))
 ```
 
-Most tests for linearity require more degrees of freedom to provide reliable results than can be spared in our small dataset. Thus, we take a visual estimation approach, checking partial regression plots for any obvious nonlinearity.
+To address this issue, we exclude the bare ground predictor.
+
+```{r}
+data <- data %>%
+  dplyr::select(- bare_ground)
+data_columns <- data_columns %>% subset(!(column == "bare_ground"))
+```
+
+Most tests for linearity require more degrees of freedom to provide reliable results than can be spared in our small dataset. Thus, we take a visual estimation approach, checking partial regression plots for any obvious nonlinearity. We simultaneously test model diagnostics using the performance package.
 
 ```{r}
 #| fig-height: 8
 for (response in data_columns$column[which(data_columns$type == "response")]) {
-  temp_data <- data %>% 
+  temp_data <- data %>%
     dplyr::select(
       all_of(response), 
       all_of(data_columns$column[which(data_columns$type == "predictor")]),
@@ -181,28 +204,105 @@ for (response in data_columns$column[which(data_columns$type == "response")]) {
 }
 ```
 
-We will test for heteroskedasticity and ensure normally distributed residuals during the analysis itself.
+```{r}
+#| warning: false
+#| message: false
+#| fig-height: 10
+#| fig-width: 10
+for (response in data_columns$column[which(data_columns$type == "response")]) {
+  cat(paste("Diagnostic Plots for", response))
+  temp_data <- data %>%
+    dplyr::select(
+      all_of(response), 
+      all_of(data_columns$column[which(data_columns$type == "predictor")]),
+      all_of(data_columns$column[which(data_columns$type == "category")])
+      )
+  mod <- lm(temp_data)
+  plot(performance::check_model(mod))
+}
+```
+
+Although the diagnostic plots are not perfect, variation and imperfections are acceptable given our small sample size. The only metric we found concerning was a single influential datapoint in the butterfly species richness regression with barely failed the cook's distance test (????). We considered removing this datapoint, but it caused a cascade of further outliers and Variance Inflation issues. Thus, we opted to leave this datapoint despite its high influence.
 
 ## Analysis
 
 ```{r}
-#| results: 'asis'
+#| results: false
 bms_mods <- list()
 for (response in data_columns$column[which(data_columns$type == "response")]) {
-  #cat("\n\n#### BMS Plots for Response:", data_columns$label[which(data_columns$column == response)], "\n\n\n")
   analysis_data <- data %>% 
     dplyr::select(
       all_of(response), 
       all_of(data_columns$column[which(data_columns$type == "predictor")]), 
       all_of(data_columns$column[which(data_columns$type == "category")])
       )
-  bms_mod <- BMS::bms(analysis_data, mprior = "fixed", mprior.size = 2, mcmc = "enumerate", g = "hyper")
-  image(bms_mod)
+  bms_mods[[length(bms_mods) + 1]] <- BMS::bms(
+    analysis_data, 
+    mprior = "fixed", 
+    mprior.size = 2, 
+    mcmc = "enumerate", 
+    g = "hyper", 
+    user.int = FALSE
+    )
+}
+names(bms_mods) <- data_columns$column[which(data_columns$type == "response")]
+```
+
+## Results
+
+```{r}
+#| results: 'asis'
+#| echo: false
+for (response in data_columns$column[which(data_columns$type == "response")]) {
+  cat(paste(
+    "\n\n### Results for", 
+    data_columns$label[which(data_columns$column == response)], 
+    "Response\n\n```\n"
+    ))
+  bms_mod <- bms_mods[[response]]
+  print(bms_mod)
+  cat("```\n")
 }
 ```
 
-THINGS TO DO:
-
--   Forest plots using density and quartiles functions
-
--   Check the other assumptions
+```{r}
+#| fig-height: 8
+#| fig-width: 8
+bms_plots <- list()
+for (i in 1:length(bms_mods)) {
+  bms_mod <- bms_mods[[i]]
+  effects <- data.frame(coef(bms_mod, std.coefs = TRUE))
+  plot_data <- effects[, 1:3]
+  plot_data$name <- rownames(effects)
+  plot_data$label <- plot_data$name %>% vapply(function(x) {data_columns$label[which(data_columns$column == x)]}, FUN.VALUE = c(""))
+  plot_data$order <- plot_data$name %>% vapply(function(x) {data_columns$predictor_order[which(data_columns$column == x)]}, FUN.VALUE = c(0))
+  for (variable in plot_data$name) {
+    confidence_intervals <- quantile(density(bms_mod, reg = variable, plot = FALSE, std.coefs = TRUE), probs = c(0.025, 0.975))
+    plot_data$lower_ci[which(plot_data$name == variable)] <- confidence_intervals[1]
+    plot_data$upper_ci[which(plot_data$name == variable)] <- confidence_intervals[2]
+  }
+  plot_data <- plot_data[order(plot_data$order),]
+  plot_data$sequence <- 1:nrow(plot_data)
+  forest_plot <- ggplot(plot_data, aes(x = Post.Mean, y = reorder(label, -sequence), xmin = lower_ci, xmax = upper_ci)) +
+    geom_vline(xintercept=0, lty=2, color = "gray60") +
+    geom_linerange() +
+    geom_point(aes(size = PIP)) +
+    scale_size_binned(breaks = c(0.3, 0.5, 0.7), limits = c(0, 1), range = c(0.5, 9)) +
+    scale_x_continuous(breaks = c(-1, -0.5, 0, 0.5, 1), limits = c(-1.25, 1.25)) +
+    theme_bw() + labs(
+      x = "Standardized Posterior Mean (± 95% Credible Interval)",
+      y = "Predictor",
+      title = data_columns$label[which(data_columns$column ==names(bms_mods)[i])]
+      ) + 
+    theme(title =element_text(size = 8, face = 'plain'))
+  bms_plots[[i]] <- forest_plot
+}
+patchwork::wrap_plots(bms_plots, ncol = 2) + 
+  plot_layout(guides = "collect", axes = "collect") +
+  plot_annotation(title = "Bayesian Model Averaging Results Summary") & 
+  theme(
+    axis.title = element_text(size = 12, face = "plain"),
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 11, face = "plain")
+    )
+```
