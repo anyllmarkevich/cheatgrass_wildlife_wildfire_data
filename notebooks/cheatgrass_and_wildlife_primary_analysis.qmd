@@ -218,6 +218,7 @@ for (response in data_columns$column[which(data_columns$type == "response")]) {
       all_of(data_columns$column[which(data_columns$type == "category")])
       )
   mod <- lm(temp_data)
+  print(summary(mod))
   plot(performance::check_model(mod))
 }
 ```
@@ -238,7 +239,7 @@ for (response in data_columns$column[which(data_columns$type == "response")]) {
       )
   bms_mods[[length(bms_mods) + 1]] <- BMS::bms(
     analysis_data, 
-    mprior = "fixed", 
+    mprior = "random", 
     mprior.size = 2, 
     mcmc = "enumerate", 
     g = "hyper", 
