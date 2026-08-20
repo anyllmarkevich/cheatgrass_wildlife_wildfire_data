@@ -332,6 +332,50 @@ for (i in 1:length(bms_mods)) {
     table[nrow(table) + 1, ] <- c(category, predictor, round(pip, 2), round(post_mean, 2), credible_interval)
   }
 }
+
+# 1. Split Category into Taxon and Metric, then pivot wide
+df <- as_tibble(table)
+df_wide <- df %>%
+  mutate(
+    Taxon = case_when(
+      grepl("Mammal", Categ, ignore.case = TRUE) ~ "MAMMALS",
+      grepl("Bird", Categ, ignore.case = TRUE) ~ "BIRDS",
+      grepl("Butterfly", Categ, ignore.case = TRUE) ~ "BUTTERFLIES",
+      TRUE ~ Categ
+    ),
+    Metric = if_else(grepl("Species", Categ, ignore.case = TRUE), "Species Count", "Individual Count")
+  ) %>%
+  select(-Categ) %>%
+  pivot_wider(
+    #id_cols = c(Taxon, Predictor),
+    id_cols = c(Taxon, Predictor),
+    names_from = Metric,
+    values_from = c(`Post Mean`, `95% Credible Interval`),
+    names_glue = "{Metric}_{.value}"
+  ) %>%
+  # Reorder columns: Taxon first, followed by Individual Count block, then Species block
+  select(
+    Taxon,
+    starts_with("Individual Count_"),
+    starts_with("Species Count_")
+  )
+
+# 2. Build PDF/Word-compatible gt table
+df_wide %>%
+  gt(groupname_col = "Taxon") %>%
+  tab_spanner_delim(delim = "_") %>%
+  cols_label(
+    ends_with("Predictor") ~ "Predictor",
+    ends_with("Post Mean") ~ "Post Mean",
+    ends_with("95% Credible Interval") ~ "95% Credible Interval"
+  ) %>%
+  sub_missing(missing_text = "")
+
+
+
+
+
+
 cols <- data_columns %>% subset(type == "response")
 table_1 <- table[which(table$Categ %in% cols$label[1:nrow(cols) %% 2 != 0]), ]
 table_2 <- table[which(table$Categ %in% cols$label[1:nrow(cols) %% 2 == 0]), ]
