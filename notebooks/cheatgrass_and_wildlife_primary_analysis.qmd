@@ -24,6 +24,9 @@ library(ggplot2)
 library(BMS)
 library(performance)
 library(patchwork)
+#library(tidyverse)
+#library(flextable)
+library(gt)
 ```
 
 ```{r}
@@ -133,7 +136,7 @@ temp_data <- data %>%
     )
 corr_matrix <- cor(temp_data)
 corr_matrix[upper.tri(corr_matrix, diag = TRUE)] <- NA
-indices <- which(corr_matrix >= 0.8, arr.ind=TRUE)
+indices <- which(corr_matrix >= 0.7, arr.ind=TRUE)
 cat(
   paste("Pairs of preditors with a correlation coefficient greater than or equal to 0.8:",
   paste(
@@ -145,6 +148,8 @@ cat(
 ```
 
 All the cheatgrass cover variables are strongly correlated with one another (and form a regression singularity), so we will only keep the total cheatgrass cover metric (`cheatgrass_total`). The strong correlation between cheatgrass plants and litter suggest that this study is not capable of distinguishing between the ecological impact of these types of ground cover. Thus, we opt to use the sum of these two values as this combined metric is more likely to show a statistical relationship with the abundance and species richness of any taxa impacted by either or both cheatgrass plants and cheatgrass litter.
+
+BARE GROUND TOO
 
 Similarly, as plot slope and the distance between the plot and the nearest highway are highly correlated due to the mountain geography in the study area, we will only keep the slope predictor (`slope`). Distance to the highway was originally included in case mammals were afraid of human activity, but we had no evidence that this was the case, so we will keep slope as it is a more ecologically relevant predictor.
 
@@ -273,7 +278,6 @@ for (i in 1:length(bms_mods)) {
   bms_mod <- bms_mods[[i]]
   effects <- data.frame(coef(bms_mod, std.coefs = TRUE, condi.coef = TRUE))
   plot_data <- effects[, 1:3]
-  #plot_data$Post.Mean <- plot_data$Post.Mean/plot_data$PIP
   plot_data$name <- rownames(effects)
   plot_data$label <- plot_data$name %>% vapply(function(x) {data_columns$label[which(data_columns$column == x)]}, FUN.VALUE = c(""))
   plot_data$order <- plot_data$name %>% vapply(function(x) {data_columns$predictor_order[which(data_columns$column == x)]}, FUN.VALUE = c(0))
@@ -306,4 +310,34 @@ patchwork::wrap_plots(bms_plots, ncol = 2) +
     legend.title = element_text(size = 12, face = "bold"),
     legend.text = element_text(size = 11, face = "plain")
     )
+```
+
+Table
+
+```{r}
+bms_plots <- list()
+table <- data.frame(matrix(nrow = 0, ncol = 5))
+colnames(table) <- c("Categ", "Predictor", "PIP", "Post Mean", "95% Credible Interval")
+for (i in 1:length(bms_mods)) {
+  bms_mod <- bms_mods[[i]]
+  effects <- data.frame(coef(bms_mod, std.coefs = TRUE, condi.coef = TRUE))
+  predictors <- rownames(effects)
+  for (this_predictor in 1:nrow(effects)) {
+    predictor <- data_columns$label[which(data_columns$column == predictors[this_predictor])]
+    pip <- effects$PIP[this_predictor]
+    post_mean <- effects$Post.Mean[this_predictor]
+    confidence_intervals <- quantile(density(bms_mod, reg = predictors[this_predictor], plot = FALSE, std.coefs = TRUE), probs = c(0.025, 0.975)) %>% round(2)
+    credible_interval <- paste("[", confidence_intervals[1], ", ", confidence_intervals[2], "]", sep = "")
+    category <- data_columns$label[which(data_columns$column ==names(bms_mods)[i])]
+    table[nrow(table) + 1, ] <- c(category, predictor, round(pip, 2), round(post_mean, 2), credible_interval)
+  }
+}
+cols <- data_columns %>% subset(type == "response")
+table_1 <- table[which(table$Categ %in% cols$label[1:nrow(cols) %% 2 != 0]), ]
+table_2 <- table[which(table$Categ %in% cols$label[1:nrow(cols) %% 2 == 0]), ]
+table <- bind_rows(table_1, table_2)
+
+table
+gt(table)
+#gt(table, groupname_col = "Categ", row_group_as_column = FALSE)
 ```
