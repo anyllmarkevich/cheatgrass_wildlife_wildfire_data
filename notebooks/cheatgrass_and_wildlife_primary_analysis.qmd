@@ -321,7 +321,7 @@ Table
 #| fig-width: 8
 bms_plots <- list()
 table <- data.frame(matrix(nrow = 0, ncol = 7))
-colnames(table) <- c("Taxon", "Metric", "Entry", "Predictor", "PIP", "Post Mean", "95% Credible Interval")
+colnames(table) <- c("Taxon", "Metric", "Entry", "Predictor", "PIP", "Post Mean", "Post SD")
 for (i in 1:length(bms_mods)) {
   bms_mod <- bms_mods[[i]]
   effects <- data.frame(coef(bms_mod, std.coefs = TRUE, condi.coef = TRUE))
@@ -330,9 +330,7 @@ for (i in 1:length(bms_mods)) {
     predictor <- data_columns$label[which(data_columns$column == predictors[this_predictor])]
     pip <- effects$PIP[this_predictor]
     post_mean <- effects$Post.Mean[this_predictor]
-    
-    confidence_intervals <- quantile(density(bms_mod, reg = predictors[this_predictor], plot = FALSE, std.coefs = TRUE), probs = c(0.025, 0.975)) %>% round(3)
-    credible_interval <- paste("[", confidence_intervals[1], ", ", confidence_intervals[2], "]", sep = "")
+    sd <- effects$Post.SD[this_predictor]
     
     category <- data_columns$label[which(data_columns$column == names(bms_mods)[i])]
     
@@ -341,7 +339,7 @@ for (i in 1:length(bms_mods)) {
       paste(collapse = " ") %>%
       sub("Count", "Individual Count", .)
     
-    table[nrow(table) + 1, ] <- c(taxon, metric, this_predictor, predictor, round(pip, 3), round(post_mean, 3), credible_interval)
+    table[nrow(table) + 1, ] <- c(taxon, metric, this_predictor, predictor, round(pip, 3), round(post_mean, 3), round(sd, 3))
   }
 }
 
@@ -349,7 +347,7 @@ wide_table <- table %>%
   tidyr::pivot_wider(
     id_cols = c(Taxon, Entry),
     names_from = Metric,
-    values_from = c(Predictor, PIP, `Post Mean`, `95% Credible Interval`),
+    values_from = c(Predictor, PIP, `Post Mean`, `Post SD`),
     names_vary = "slowest"
     ) %>%
   select(-Entry)
