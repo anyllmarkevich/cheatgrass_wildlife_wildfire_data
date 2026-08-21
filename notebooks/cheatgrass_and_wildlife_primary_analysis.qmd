@@ -109,6 +109,7 @@ SCALE DATA???
 data_columns$label <- NA
 data_columns$label[which(data_columns$type %in% c("response", "predictor", "category"))] <- 
   c("Mammal Count", "Mammal Species Richness", "Bird Count", "Bird Species Richness", "Butterfly Count", "Butterfly Species Richness", "Cheatgrass Plant Cover", "Cheatgrass Litter Cover", "Bare Ground Cover", "Woody Cover", "Living Woody Cover", "Distance to Highway", "Slope", "Year", "Plot in Burn Area", "Plot was Burned", "Cheatgrass Cover")
+data_columns$code[which(data_columns$type %in% c("predictor", "category"))] <- c("Cp", "Cl", "Bg", "W", "Wl", "Dh", "S", "Y", "X", "B", "C")
 data_columns$predictor_order[which(data_columns$type %in% c("predictor", "category"))] <- 
   c(2, 3, 7, 5, 6 , 9, 8, 10, 11, 12, 1)
 ```
@@ -317,9 +318,6 @@ patchwork::wrap_plots(bms_plots, ncol = 2) +
 Table
 
 ```{r}
-#| fig-height: 8
-#| fig-width: 8
-bms_plots <- list()
 table <- data.frame(matrix(nrow = 0, ncol = 7))
 colnames(table) <- c("Taxon", "Metric", "Entry", "Predictor", "PIP", "Post Mean", "Post SD")
 for (i in 1:length(bms_mods)) {
@@ -365,6 +363,68 @@ wide_table %>%
     locations = list(
       cells_column_labels(columns = 5),
       cells_body(columns = 5)
+    )
+  )
+```
+
+```{r}
+table <- data.frame(matrix(nrow = 0, ncol = 6))
+colnames(table) <- c("Taxon", "Metric", "Entry", "Model", "PMP", "Predictors")
+for (i in 1:length(bms_mods)) {
+  bms_mod <- bms_mods[[i]]
+  models <- topmodels.bma(bms_mod)
+  predictors <- rownames(models)[1:(nrow(models)-2)]
+  selected_models <- models[, 1:6]
+  model_predictors <- selected_models[1:(nrow(selected_models)-2), ]
+  model_pmps <- selected_models["PMP (Exact)", ]
+  normalized_model_pmps <- model_pmps/sum(model_pmps)
+  for (this_model in 1:ncol(selected_models)) {
+    #model_name <- colnames(selected_models)[this_model]
+    model_name <- paste("Model", this_model)
+    included_predictors <- predictors[which(model_predictors[, this_model] == 1)]
+    predictor_codes <- included_predictors %>% 
+      vapply(
+        function(x) {
+          data_columns$code[which(data_columns$column == x)]
+          }, 
+        FUN.VALUE = c("")
+        ) %>%
+      paste(collapse = "")
+    pmp <- unname(normalized_model_pmps[this_model])
+    
+    category <- data_columns$label[which(data_columns$column == names(bms_mods)[i])]
+    
+    taxon <- stringr::str_split(category, " ")[[1]][1]
+    metric <- stringr::str_split(category, " ")[[1]][-1] %>% 
+      paste(collapse = " ") %>%
+      sub("Count", "Individual Count", .)
+    
+    table[nrow(table) + 1, ] <- c(taxon, metric, this_model, model_name, round(pmp, 3), predictor_codes)
+  }
+}
+
+wide_table <- table %>% 
+  tidyr::pivot_wider(
+    id_cols = c(Taxon, Entry),
+    names_from = Metric,
+    values_from = c(Model, PMP, Predictors),
+    names_vary = "slowest"
+    ) %>%
+  select(-Entry)
+
+wide_table %>% 
+  gt::gt(groupname_col = "Taxon") %>%
+  gt::tab_spanner_delim(delim = "_", reverse = TRUE) %>%
+  gt::tab_options(table.width = 500) %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_row_groups(), cells_column_spanners())
+  ) %>%
+  tab_style(
+    style = cell_borders(sides = "right", color = "grey", weight = px(2)),
+    locations = list(
+      cells_column_labels(columns = 4),
+      cells_body(columns = 4)
     )
   )
 ```
