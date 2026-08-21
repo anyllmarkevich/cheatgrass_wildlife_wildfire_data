@@ -1,7 +1,7 @@
 ---
 title: "Primary Analysis: Cheatgrass and Wildlife"
 author: "Anyll Markevich"
-format: html
+format: docx
 editor: visual
 ---
 
@@ -27,6 +27,8 @@ library(patchwork)
 #library(tidyverse)
 #library(flextable)
 library(gt)
+library(stringr)
+library(tidyr)
 ```
 
 ```{r}
@@ -315,9 +317,11 @@ patchwork::wrap_plots(bms_plots, ncol = 2) +
 Table
 
 ```{r}
+#| fig-height: 8
+#| fig-width: 8
 bms_plots <- list()
-table <- data.frame(matrix(nrow = 0, ncol = 5))
-colnames(table) <- c("Categ", "Predictor", "PIP", "Post Mean", "95% Credible Interval")
+table <- data.frame(matrix(nrow = 0, ncol = 7))
+colnames(table) <- c("Taxon", "Metric", "Entry", "Predictor", "PIP", "Post Mean", "95% Credible Interval")
 for (i in 1:length(bms_mods)) {
   bms_mod <- bms_mods[[i]]
   effects <- data.frame(coef(bms_mod, std.coefs = TRUE, condi.coef = TRUE))
@@ -326,62 +330,43 @@ for (i in 1:length(bms_mods)) {
     predictor <- data_columns$label[which(data_columns$column == predictors[this_predictor])]
     pip <- effects$PIP[this_predictor]
     post_mean <- effects$Post.Mean[this_predictor]
-    confidence_intervals <- quantile(density(bms_mod, reg = predictors[this_predictor], plot = FALSE, std.coefs = TRUE), probs = c(0.025, 0.975)) %>% round(2)
+    
+    confidence_intervals <- quantile(density(bms_mod, reg = predictors[this_predictor], plot = FALSE, std.coefs = TRUE), probs = c(0.025, 0.975)) %>% round(3)
     credible_interval <- paste("[", confidence_intervals[1], ", ", confidence_intervals[2], "]", sep = "")
-    category <- data_columns$label[which(data_columns$column ==names(bms_mods)[i])]
-    table[nrow(table) + 1, ] <- c(category, predictor, round(pip, 2), round(post_mean, 2), credible_interval)
+    
+    category <- data_columns$label[which(data_columns$column == names(bms_mods)[i])]
+    
+    taxon <- stringr::str_split(category, " ")[[1]][1]
+    metric <- stringr::str_split(category, " ")[[1]][-1] %>% 
+      paste(collapse = " ") %>%
+      sub("Count", "Individual Count", .)
+    
+    table[nrow(table) + 1, ] <- c(taxon, metric, this_predictor, predictor, round(pip, 3), round(post_mean, 3), credible_interval)
   }
 }
 
-# 1. Split Category into Taxon and Metric, then pivot wide
-df <- as_tibble(table)
-df_wide <- df %>%
-  mutate(
-    Taxon = case_when(
-      grepl("Mammal", Categ, ignore.case = TRUE) ~ "MAMMALS",
-      grepl("Bird", Categ, ignore.case = TRUE) ~ "BIRDS",
-      grepl("Butterfly", Categ, ignore.case = TRUE) ~ "BUTTERFLIES",
-      TRUE ~ Categ
-    ),
-    Metric = if_else(grepl("Species", Categ, ignore.case = TRUE), "Species Count", "Individual Count")
-  ) %>%
-  select(-Categ) %>%
-  pivot_wider(
-    #id_cols = c(Taxon, Predictor),
-    id_cols = c(Taxon, Predictor),
+wide_table <- table %>% 
+  tidyr::pivot_wider(
+    id_cols = c(Taxon, Entry),
     names_from = Metric,
-    values_from = c(`Post Mean`, `95% Credible Interval`),
-    names_glue = "{Metric}_{.value}"
+    values_from = c(Predictor, PIP, `Post Mean`, `95% Credible Interval`),
+    names_vary = "slowest"
+    ) %>%
+  select(-Entry)
+
+wide_table %>% 
+  gt::gt(groupname_col = "Taxon") %>%
+  gt::tab_spanner_delim(delim = "_", reverse = TRUE) %>%
+  gt::tab_options(table.width = 1000) %>% 
+  tab_style(
+    style = cell_text(weight = "bold"),
+    locations = list(cells_row_groups(), cells_column_spanners())
   ) %>%
-  # Reorder columns: Taxon first, followed by Individual Count block, then Species block
-  select(
-    Taxon,
-    starts_with("Individual Count_"),
-    starts_with("Species Count_")
+  tab_style(
+    style = cell_borders(sides = "right", color = "grey", weight = px(2)),
+    locations = list(
+      cells_column_labels(columns = 5),
+      cells_body(columns = 5)
+    )
   )
-
-# 2. Build PDF/Word-compatible gt table
-df_wide %>%
-  gt(groupname_col = "Taxon") %>%
-  tab_spanner_delim(delim = "_") %>%
-  cols_label(
-    ends_with("Predictor") ~ "Predictor",
-    ends_with("Post Mean") ~ "Post Mean",
-    ends_with("95% Credible Interval") ~ "95% Credible Interval"
-  ) %>%
-  sub_missing(missing_text = "")
-
-
-
-
-
-
-cols <- data_columns %>% subset(type == "response")
-table_1 <- table[which(table$Categ %in% cols$label[1:nrow(cols) %% 2 != 0]), ]
-table_2 <- table[which(table$Categ %in% cols$label[1:nrow(cols) %% 2 == 0]), ]
-table <- bind_rows(table_1, table_2)
-
-table
-gt(table)
-#gt(table, groupname_col = "Categ", row_group_as_column = FALSE)
 ```
