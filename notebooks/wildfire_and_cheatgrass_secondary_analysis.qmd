@@ -20,7 +20,9 @@ library(dplyr)
 library(rstanarm)
 library(ggplot2)
 library(report)
+library(rstanarm)
 library(performance)
+library(marginaleffects)
 ```
 
 ```{r}
@@ -62,9 +64,14 @@ original_data <- read.csv(here::here(
 ## Process Data
 
 ```{r}
-data <- original_data
-data$cheatgrass_2020 <- data$cheatgrass_plant_2020 + data$cheatgrass_litter_2020
-data$cheatgrass_2021 <- data$cheatgrass_plant_2021 + data$cheatgrass_litter_2021
+data <- data.frame(matrix(nrow = 8, ncol = 0))
+data$plot <- original_data$plot
+data$burned <- original_data$burned
+data$cheatgrass_2020 <- original_data$cheatgrass_plant_2020 + original_data$cheatgrass_litter_2020
+data$cheatgrass_2021_hit <- (original_data$cheatgrass_plant_2021 + original_data$cheatgrass_litter_2021) * 1000
+data$cheatgrass_2021_miss <- 1000 - data$cheatgrass_2021_hit
+
+data$cheatgrass_2020 <- data$cheatgrass_2020 - mean(data$cheatgrass_2020)
 ```
 
 ## Diagnostics
@@ -74,32 +81,34 @@ data$cheatgrass_2021 <- data$cheatgrass_plant_2021 + data$cheatgrass_litter_2021
 #| message: false
 #| fig-height: 10
 #| fig-width: 10
-ls_mod <- lm(cheatgrass_2021 ~ burned * cheatgrass_2020, data = data)
+ls_mod <- glm(
+  cbind(cheatgrass_2021_hit, cheatgrass_2021_miss) ~ burned * cheatgrass_2020, 
+  data = data,
+  family = binomial(link = "logit")
+  )
 plot(performance::check_model(ls_mod))
 ```
 
 ## Analysis
 
 ```{r}
-#| output: false
 # Default weakly informative prior
-def_bay_cheat <- stan_glm(
-  cheatgrass_2021 ~ burned * cheatgrass_2020, 
-  data = data, 
-  family = gaussian(),
+def_bay_cheat <- rstanarm::stan_glm(
+  cbind(cheatgrass_2021_hit, cheatgrass_2021_miss) ~ burned * cheatgrass_2020, 
+  data = data,
+  family = binomial(link = "logit"),
   refresh = 0
   )
 default_priors <- prior_summary(def_bay_cheat)$prior$adjusted_scale
 default_intercept <- prior_summary(def_bay_cheat)$prior_intercept$adjusted_scale
 # Informative Prior
-mod <- stan_glm(
-  cheatgrass_2021 ~ burned * cheatgrass_2020, 
-  data = data, 
-  family = gaussian(), 
+mod <- rstanarm::stan_glm(
+  cbind(cheatgrass_2021_hit, cheatgrass_2021_miss) ~ burned * cheatgrass_2020, 
+  data = data,
+  family = binomial(link = "logit"),
   prior = normal(
-    location = c(0,1,0), 
-    scale = c(default_priors[1], 0.5, default_priors[3]), 
-    autoscale = FALSE
+    location = c(0,4,0), 
+    scale = c(4, 4, 4), autoscale = FALSE
     ), 
   prior_intercept = normal(0, default_intercept, autoscale = FALSE),
   refresh = 0
@@ -111,13 +120,11 @@ mod <- stan_glm(
 ```{r}
 graph_distribution <- function(rstanarm_object, parameter) {
   posterior <- as.data.frame(rstanarm_object)
-  unform_mod <- update(rstanarm_object, prior = NULL, prior_intercept = NULL)
+  unform_mod <- update(rstanarm_object, prior = NULL, prior_intercept = NULL, refresh = 0)
   likelihood <- as.data.frame(unform_mod)
   n_params <- length(colnames(posterior))
   selected_param <- which(colnames(posterior) == parameter)
-  if (selected_param == 1) {
-    
-  } else if (selected_param == n_params) {
+  if (parameter == "(Intercept)") {
     
   } else {
     predictor = selected_param - 1
