@@ -284,29 +284,47 @@ for (i in 1:length(bms_mods)) {
   plot_data$name <- rownames(effects)
   plot_data$label <- plot_data$name %>% vapply(function(x) {data_columns$label[which(data_columns$column == x)]}, FUN.VALUE = c(""))
   plot_data$order <- plot_data$name %>% vapply(function(x) {data_columns$predictor_order[which(data_columns$column == x)]}, FUN.VALUE = c(0))
-  for (variable in plot_data$name) {
+  
+  ci_plot_data <- data.frame(matrix(nrow = 0, ncol = 4))
+  colnames(ci_plot_data) <- c("label", "lower_ci", "upper_ci", "CI")
+  for (this_variable in 1:nrow(plot_data)) {
+    variable <- plot_data$name[this_variable]
     credible_interval_95 <- quantile(density(bms_mod, reg = variable, plot = FALSE, std.coefs = TRUE), probs = c(0.025, 0.975))
     credible_interval_68 <- quantile(density(bms_mod, reg = variable, plot = FALSE, std.coefs = TRUE), probs = c(0.16, 0.84))
-    plot_data$lower_ci_95[which(plot_data$name == variable)] <- credible_interval_95[1]
-    plot_data$upper_ci_95[which(plot_data$name == variable)] <- credible_interval_95[2]
-    plot_data$lower_ci_68[which(plot_data$name == variable)] <- credible_interval_68[1]
-    plot_data$upper_ci_68[which(plot_data$name == variable)] <- credible_interval_68[2]
+    
+    ci_plot_data[nrow(ci_plot_data) + 1, ] <- 
+      c(plot_data$label[this_variable], 
+        credible_interval_95[1], 
+        credible_interval_95[2], 
+        "95%")
+    ci_plot_data[nrow(ci_plot_data) + 1, ] <- 
+      c(plot_data$label[this_variable], 
+        credible_interval_68[1], 
+        credible_interval_68[2], 
+        "68%")
   }
+  
   plot_data <- plot_data[order(plot_data$order),]
   plot_data$sequence <- 1:nrow(plot_data)
+  ci_plot_data$sequence <- ci_plot_data$label %>% vapply(FUN = function(x) {plot_data$sequence[which(plot_data$label == x)]}, FUN.VALUE = c(1))
+  ci_plot_data$lower_ci <- as.numeric(ci_plot_data$lower_ci)
+  ci_plot_data$upper_ci <- as.numeric(ci_plot_data$upper_ci)
+  ci_plot_data$CI     <- as.factor(ci_plot_data$CI)
+  
   forest_plot <- ggplot(plot_data, aes(x = Post.Mean, y = reorder(label, -sequence))) +
     geom_vline(xintercept=0, lty=2, color = "gray60") +
-    geom_linerange(aes(xmin = lower_ci_95, xmax = upper_ci_95)) +
-    geom_linerange(aes(xmin = lower_ci_68, xmax = upper_ci_68), linewidth = 1) +
+    geom_linerange(data = ci_plot_data, mapping = aes(y = reorder(label, -sequence), xmin = lower_ci, xmax = upper_ci, linewidth = CI), inherit.aes = FALSE) +
+    scale_discrete_manual("linewidth", values = c(1, 0.5)) +
     geom_point(aes(size = PIP)) +
     scale_size_binned(breaks = c(0.3, 0.5, 0.7), limits = c(0, 1), range = c(0.5, 9)) +
     scale_x_continuous(breaks = c(-1, -0.5, 0, 0.5, 1), limits = c(-1.25, 1.25)) +
-    theme_bw() + labs(
+    theme_bw() + 
+    labs(
       x = "Conditional Standardized Posterior Mean (± 95% Credible Interval)",
       y = "Predictor",
-      title = data_columns$label[which(data_columns$column ==names(bms_mods)[i])]
+      title = data_columns$label[which(data_columns$column == names(bms_mods)[i])]
       ) + 
-    theme(title =element_text(size = 8, face = 'plain'))
+    theme(title = element_text(size = 8, face = 'plain'))
   bms_plots[[i]] <- forest_plot
 }
 patchwork::wrap_plots(bms_plots, ncol = 2) + 
